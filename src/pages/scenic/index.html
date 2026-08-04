@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>岳桩山生态景区</title>
+  <link rel="stylesheet" href="../../ui/common.css" />
+</head>
+<body>
+  <main class="page" id="root" hidden>
+    <h1 id="hero"></h1>
+    <p id="intro" class="readable"></p>
+
+    <h2>站内检索</h2>
+    <div style="display:flex; gap:0.5em; flex-wrap:wrap;">
+      <input type="text" id="search" class="input" placeholder='试试"岳圣桩""传说"…' />
+      <button class="btn" id="searchBtn">搜索</button>
+      <button class="btn" id="hintBtn">我卡住了</button>
+    </div>
+    <div id="hintArea"></div>
+    <div id="searchResult" class="readable" style="margin-top:1em"></div>
+
+    <div id="legendPage" class="legend-page readable" hidden>
+      <h2 id="legendTitle"></h2>
+      <div id="legendBody" class="mail-body"></div>
+      <div class="annotation" id="annotation"></div>
+      <p style="margin-top:1em"><a class="btn" id="annalsLink" href="#">〔古籍残页·岳桩县志〕</a></p>
+    </div>
+
+    <div id="annalsPage" class="readable" hidden>
+      <h2>岳桩县数字县志 · 残页</h2>
+      <div class="mail-body" id="annalsBody"></div>
+      <p><small style="opacity:0.6">（支线：县志残页为可选内容，不影响主线推进。）</small></p>
+    </div>
+
+    <hr style="margin:2em 0; border-color:rgba(255,255,255,0.1)" />
+    <p class="readable">返回 <a class="btn" href="../mail/index.html">邮箱</a> 或前往 <a class="btn" href="../chat/index.html">聊天</a>。</p>
+  </main>
+
+  <script type="module" src="./main.ts"></script>
+</body>
+</html>

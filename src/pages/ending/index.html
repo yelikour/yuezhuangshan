@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>——</title>
+  <link rel="stylesheet" href="../../ui/common.css" />
+</head>
+<body>
+  <main class="page" id="root" hidden>
+    <!-- 演出区：假消息 + 照片矛盾（克制，无 jump-scare） -->
+    <section id="scene">
+      <div class="faux-bar" style="margin:-1.5em -1.2em 1em">
+        <span class="faux-brand">谛听</span>
+        <span class="faux-url">来自：沈苒（已离线 5 小时 32 分）</span>
+      </div>
+      <div class="chat-msg her" id="fakeMsg"></div>
+      <div id="photoRow" hidden>
+        <!-- SVG 占位：穿着祭祀袍、背景有工牌挂钩的自拍剪影 -->
+        <svg class="photo-mold" width="240" height="300" viewBox="0 0 240 300" aria-label="一张沈苒发来的照片">
+          <rect width="240" height="300" fill="#0a0a0a"/>
+          <!-- 背景墙工牌挂钩 -->
+          <g stroke="#3a3a3a" stroke-width="2">
+            <line x1="20" y1="40" x2="220" y2="40"/>
+          </g>
+          <g fill="#555">
+            <rect x="35" y="40" width="3" height="10"/><rect x="70" y="40" width="3" height="10"/>
+            <rect x="105" y="40" width="3" height="10"/><rect x="140" y="40" width="3" height="10"/>
+            <rect x="175" y="40" width="3" height="10"/><rect x="210" y="40" width="3" height="10"/>
+          </g>
+          <text x="120" y="55" fill="#666" font-size="9" text-anchor="middle" font-family="monospace">研讨会工作人员 · 工牌区</text>
+          <!-- 白色祭祀袍人形剪影 -->
+          <ellipse cx="120" cy="120" rx="22" ry="26" fill="#d8d8d8" opacity="0.85"/>
+          <path d="M120 146 Q70 170 70 290 L170 290 Q170 170 120 146 Z" fill="#d8d8d8" opacity="0.85"/>
+          <!-- 领口"合奘"纹样（简化） -->
+          <text x="120" y="180" fill="#888" font-size="11" text-anchor="middle" font-family="serif">合奘</text>
+        </svg>
+        <div class="photo-stamp">IMG_20260621_021103.jpg · 时间戳 02:11</div>
+      </div>
+      <div id="clues" hidden style="margin-top:1.5em"></div>
+    </section>
+
+    <!-- 阶段结束页 -->
+    <section id="endPage" hidden>
+      <h1 id="endTitle" class="will-flicker"></h1>
+      <div id="endSummary" class="readable mail-body"></div>
+      <hr style="margin:1.5em 0; border-color:rgba(255,255,255,0.1)" />
+      <p class="readable">存档已自动保存。你随时可以从启动器"继续游戏"回到此处。</p>
+      <p class="readable" style="margin-top:1em">
+        <a class="btn" href="../../index.html">返回导航首页</a>
+      </p>
+      <p class="readable" style="opacity:0.5; margin-top:1.5em; font-size:0.85em">
+        —— 第一阶段纵向切片 · 完 ——<br/>
+        下一阶段预告：进入岳圣桩维护通道；与"半是沈苒、半是母体"的她周旋；面对最终的选择——提交、销毁，或成为容器。
+      </p>
+    </section>
+  </main>
+
+  <script type="module" src="./main.ts"></script>
+</body>
+</html>

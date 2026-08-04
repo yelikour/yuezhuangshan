@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>岳桩资讯 · 存档检索</title>
+  <link rel="stylesheet" href="../../ui/common.css" />
+</head>
+<body>
+  <main class="page" id="root" hidden>
+    <h1 id="newsTitle"></h1>
+    <p class="readable">本库收录岳桩县地方新闻存档。输入关键词检索。</p>
+
+    <div style="display:flex; gap:0.5em; flex-wrap:wrap;">
+      <input type="text" id="search" class="input" />
+      <button class="btn" id="searchBtn">检索</button>
+      <button class="btn" id="hintBtn">我卡住了</button>
+    </div>
+    <div id="hintArea"></div>
+
+    <div id="results" class="readable" style="margin-top:1em"></div>
+
+    <div id="detailModal" hidden style="margin-top:1.5em; border:1px solid rgba(255,255,255,0.15); padding:1em; background:rgba(0,0,0,0.3)">
+      <button class="btn" id="closeDetail" style="float:right">关闭</button>
+      <div id="detailBody" class="mail-body readable"></div>
+    </div>
+
+    <hr style="margin:2em 0; border-color:rgba(255,255,255,0.1)" />
+    <div id="afterSolve" class="readable" hidden>
+      <h2>你发现了什么</h2>
+      <p>那篇 2019-02-14 的旧报道被改过：<strong>标题写"自行失足"，正文却写"自愿返回"</strong>，家属栏还是空的。</p>
+      <p>更关键的是：<strong>2019-02-14 正是那一年的正月初十</strong>——和岳桩村三年一度"送老归山"的传统完全重合。这失踪不是意外。</p>
+      <p style="margin-top:1em">这条报道能查到，说明组织会把"出问题"的对外信息<strong>改写、压下</strong>。那会议后台里，会不会藏着没改干净的内部记录？</p>
+      <p style="margin-top:1em"><a class="btn" href="../backend/index.html">前往研讨会工作台</a></p>
+    </div>
+  </main>
+
+  <script type="module" src="./main.ts"></script>
+</body>
+</html>

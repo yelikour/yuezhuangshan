@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>网址导航 - 上网从这里开始</title>
+  <link rel="stylesheet" href="./src/ui/common.css" />
+  <link rel="stylesheet" href="./src/ui/home.css" />
+</head>
+<body class="skin-home">
+  <div class="home-wrap">
+    <!-- 顶部：Logo + 搜索 -->
+    <header class="home-header">
+      <div class="home-logo">
+        <span class="logo-text">导<span class="logo-accent">航</span>犬</span>
+        <span class="logo-slogan">上网从这里开始</span>
+      </div>
+      <div class="home-search">
+        <div class="search-tabs" role="tablist">
+          <button class="search-tab active" data-engine="web" role="tab">网 页</button>
+          <button class="search-tab" data-engine="news" role="tab">新 闻</button>
+          <button class="search-tab" data-engine="image" role="tab">图 片</button>
+          <button class="search-tab" data-engine="video" role="tab">视 频</button>
+          <button class="search-tab" data-engine="map" role="tab">地 图</button>
+        </div>
+        <div class="search-box">
+          <input type="text" id="searchInput" class="search-input" placeholder="输入关键词，探索全网" />
+          <button class="search-btn" id="searchBtn">搜索</button>
+        </div>
+        <div class="search-hot">
+          <span>热搜：</span>
+          <a href="#" data-key="夏日避暑">夏日避暑</a>
+          <a href="#" data-key="地方民俗">地方民俗</a>
+          <a href="#" data-key="推理小说">推理小说</a>
+          <a href="#" data-key="深山徒步">深山徒步</a>
+        </div>
+      </div>
+      <div class="home-tools">
+        <a href="#" id="openSettings" title="个性化设置">⚙ 设置</a>
+      </div>
+    </header>
+
+    <!-- 主体：网址导航 -->
+    <main class="home-main">
+      <!-- 常用网站 -->
+      <section class="nav-section">
+        <h2 class="nav-title">常用网站</h2>
+        <div class="nav-grid" id="navCommon"></div>
+      </section>
+
+      <!-- 新闻资讯 -->
+      <section class="nav-section">
+        <h2 class="nav-title">新闻资讯</h2>
+        <div class="nav-grid" id="navNews"></div>
+      </section>
+
+      <!-- 影视娱乐 -->
+      <section class="nav-section">
+        <h2 class="nav-title">影视娱乐</h2>
+        <div class="nav-grid" id="navEnt"></div>
+      </section>
+
+      <!-- 生活服务 -->
+      <section class="nav-section">
+        <h2 class="nav-title">生活服务</h2>
+        <div class="nav-grid" id="navLife"></div>
+      </section>
+
+      <!-- 旅游出行（游戏入口藏在这里） -->
+      <section class="nav-section">
+        <h2 class="nav-title">旅游出行</h2>
+        <div class="nav-grid" id="navTravel"></div>
+      </section>
+
+      <!-- 游戏 / 小游戏 -->
+      <section class="nav-section">
+        <h2 class="nav-title">休闲小游戏</h2>
+        <div class="nav-grid" id="navGame"></div>
+      </section>
+    </main>
+
+    <!-- 侧栏小部件 -->
+    <aside class="home-sidebar">
+      <div class="widget weather-widget">
+        <div class="widget-head">🌤 天气</div>
+        <div class="weather-city">岳桩县 多云</div>
+        <div class="weather-temp">26°</div>
+        <div class="weather-ext">22° / 31° · 东南风 2 级</div>
+        <div class="weather-tip">空气优 · 适合出行</div>
+      </div>
+      <div class="widget">
+        <div class="widget-head">📅 今日</div>
+        <div class="date-day" id="dateDay"></div>
+        <div class="date-lunar" id="dateLunar"></div>
+      </div>
+      <div class="widget mail-widget" id="mailWidget">
+        <div class="widget-head">✉ 邮箱</div>
+        <div class="mail-status" id="mailStatus">云雁邮 · 未读 <strong id="unreadCount">1</strong></div>
+        <a class="widget-link" id="mailLink" href="#">查看收件箱 →</a>
+      </div>
+    </aside>
+
+    <!-- 底部 -->
+    <footer class="home-footer">
+      <span>© 2026 导航犬 Daohan — 仅供演示的虚构导航站</span>
+      <span class="footer-sep">·</span>
+      <a href="#" id="aboutLink">关于</a>
+      <span class="footer-sep">·</span>
+      <a href="#" id="openSettings2">设置</a>
+      <span class="footer-note">本站所有链接均为虚构或指向演示内容。</span>
+    </footer>
+  </div>
+
+  <!-- 设置弹层（原启动器的体验设置，藏到这里） -->
+  <div class="modal-mask" id="settingsMask" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+      <div class="modal-head">
+        <h3 id="settingsTitle">个性化设置</h3>
+        <button class="modal-close" id="closeSettings" aria-label="关闭">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="settings-row">
+          <label for="vol">音量</label>
+          <input type="range" id="vol" min="0" max="1" step="0.05" />
+          <span id="volVal">50%</span>
+        </div>
+        <div class="settings-row">
+          <label for="mute">默认静音</label>
+          <input type="checkbox" id="mute" />
+          <span class="subtitle">（建议保持开启）</span>
+        </div>
+        <div class="settings-row">
+          <label for="rm">减少动态效果</label>
+          <input type="checkbox" id="rm" />
+          <span class="subtitle">（关闭闪烁与动画；光敏敏感者建议开启）</span>
+        </div>
+        <div class="settings-row">
+          <label for="sub">字幕</label>
+          <input type="checkbox" id="sub" />
+        </div>
+        <hr />
+        <div class="content-warn">
+          <strong>内容提醒：</strong>本作含悬疑、失踪、心理操控主题的虚构内容。
+          所有人物、机构、地址、账号均为虚构；本作不会读取您的真实个人信息，也不会伪造真实系统警告。
+        </div>
+        <div class="modal-actions">
+          <button class="btn" id="restartBtn">清除存档 / 重新开始</button>
+          <span id="saveStatus" class="ok-msg"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./src/pages/index/main.ts"></script>
+</body>
+</html>
