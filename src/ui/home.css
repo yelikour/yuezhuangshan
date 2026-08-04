@@ -20,6 +20,41 @@ body.skin-home .subtitle { color: #888; opacity: 1; }
   gap: 16px 18px;
 }
 
+/* ---- 收藏栏（游戏流程快捷入口） ---- */
+.bookmark-bar {
+  grid-area: header;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  border-radius: 10px;
+  padding: 8px 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  margin-top: -4px;
+  flex-wrap: wrap;
+}
+.bookmark-label { font-size: 13px; color: #b8860b; font-weight: 600; white-space: nowrap; }
+.bookmark-items { display: flex; gap: 8px; flex-wrap: wrap; }
+.bookmark-item {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 12px; border-radius: 16px;
+  background: #f0f5ff; color: #2b6cff; text-decoration: none;
+  font-size: 13px; cursor: pointer;
+  border: 1px solid #d6e4ff;
+  transition: background .15s;
+}
+.bookmark-item:hover { background: #d6e4ff; }
+.bookmark-icon { font-size: 14px; }
+.bookmark-start { background: #fff7e6; color: #d46b08; border-color: #ffd591; font-weight: 600; }
+.bookmark-start:hover { background: #ffe7ba; }
+
+/* ---- 岳桩山资料库栏（特殊样式） ---- */
+.nav-section-yzs {
+  border: 1px solid #d9ead0;
+  background: linear-gradient(180deg, #f6fff0 0%, #fff 100%);
+}
+.nav-section-yzs .nav-title { color: #389e0d; border-left-color: #389e0d; }
+
 /* ---- 顶部 ---- */
 .home-header {
   grid-area: header;
