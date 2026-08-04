@@ -21,8 +21,12 @@ const entries = {
 };
 
 export default defineConfig({
-  // base 设为 './' 以便静态部署到任意子路径
-  base: './',
+  // base 必须是部署的绝对子路径，这样多级目录页面（src/pages/xxx/）
+  // 引用打包资源（assets/xxx-hash.png）时路径才正确。
+  // 相对路径 './' 会导致子目录页面把 ./assets 解析成 src/pages/xxx/assets（404）。
+  // 本地 dev 用 '/'，生产构建用 '/yuezhuangshan/'。
+  // 若将来换部署路径（如自定义域名根路径），把 PROD_BASE 改成 '/' 即可。
+  base: process.env.NODE_ENV === 'production' ? '/yuezhuangshan/' : '/',
   resolve: {
     alias: {
       '@shared': resolve(__dirname, 'src/shared'),
