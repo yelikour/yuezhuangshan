@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>未知号码</title>
+  <link rel="stylesheet" href="../../ui/common.css" />
+</head>
+<body class="skin-chat">
+  <main class="page" id="root" hidden>
+    <h1 id="title"></h1>
+    <p class="readable" style="opacity:0.7" id="intro"></p>
+
+    <div id="messages" class="readable"></div>
+
+    <hr style="margin:1.5em 0; border-color:rgba(255,255,255,0.1)" />
+    <h2 class="readable" id="prompt"></h2>
+    <div id="choices" class="readable"></div>
+    <div style="display:flex; gap:0.5em; margin-top:1em">
+      <button class="btn" id="confirmBtn" disabled>确认这是真正的沈苒</button>
+      <button class="btn" id="hintBtn">我卡住了</button>
+    </div>
+    <div id="err" class="error-msg"></div>
+    <div id="hintArea"></div>
+
+    <div id="afterIdentify" class="readable" hidden style="margin-top:1.5em">
+      <div class="chat-msg her" style="margin:1em 0">
+        <div class="bubble" id="confession"></div>
+      </div>
+      <p style="margin-top:1em">她给你争取了几秒钟。你知道该怎么做了。</p>
+      <p style="margin-top:1em"><a class="btn" href="../ending2/index.html">做出选择</a></p>
+    </div>
+  </main>
+  <script type="module" src="./main.ts"></script>
+</body>
+</html>

@@ -18,6 +18,12 @@ const entries = {
   backend: resolve(__dirname, 'src/pages/backend/index.html'),
   // P07 切片结尾
   ending: resolve(__dirname, 'src/pages/ending/index.html'),
+  // 第二阶段：实验室内网（P08-P10）
+  lab: resolve(__dirname, 'src/pages/lab/index.html'),
+  // 第二阶段：半沈苒真假消息分辨（P11）
+  identify: resolve(__dirname, 'src/pages/identify/index.html'),
+  // 第二阶段：最终结局（P12）
+  ending2: resolve(__dirname, 'src/pages/ending2/index.html'),
 };
 
 export default defineConfig({

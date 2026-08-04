@@ -38,7 +38,7 @@ const NAV: Record<string, NavLink[]> = {
     { name: '谛听', icon: '💬', color: '#52c41a', game: true },
     { name: '岳桩资讯', icon: '📰', color: '#cf1322', game: true },
     { name: '研讨会工作台', icon: '🖥', color: '#722ed1', game: true },
-    { name: '县志古籍', icon: '📜', color: '#8a6d3b', game: true },
+    { name: '实验室内网', icon: '⚗', color: '#13c2c2', game: true },
   ],
   // 常用网站
   common: [
@@ -110,7 +110,7 @@ function gameUrl(name: string): string {
     case '谛听': return './src/pages/chat/index.html';
     case '岳桩山景区': return './src/pages/scenic/index.html';
     case '研讨会工作台': return './src/pages/backend/index.html';
-    case '县志古籍': return './src/pages/scenic/index.html'; // 跳景区页的县志支线
+    case '实验室内网': return './src/pages/lab/index.html';
     default: return './src/pages/mail/index.html';
   }
 }
@@ -128,6 +128,11 @@ function enterGame(fromEntry?: string): void {
   }
   // 否则按最近进度继续
   const order: Array<{ node: string; url: string }> = [
+    { node: 'P12', url: './src/pages/ending2/index.html' },
+    { node: 'P11', url: './src/pages/identify/index.html' },
+    { node: 'P10', url: './src/pages/lab/index.html' },
+    { node: 'P09', url: './src/pages/lab/index.html' },
+    { node: 'P08', url: './src/pages/lab/index.html' },
     { node: 'P07', url: './src/pages/ending/index.html' },
     { node: 'P06', url: './src/pages/backend/index.html' },
     { node: 'P05', url: './src/pages/backend/index.html' },
@@ -308,8 +313,8 @@ function setupBookmarks(): void {
     { node: 'P02', name: '岳桩山景区', icon: '⛰' },
     { node: 'P03', name: '谛听', icon: '💬' },
     { node: 'P04', name: '岳桩资讯', icon: '📰' },
-    { node: 'P05', name: '研讨会工作台', icon: '🖥' },
-    { node: 'P07', name: '最近消息', icon: '◉' },
+    { node: 'P08', name: '实验室内网', icon: '⚗' },
+    { node: 'P12', name: '最终抉择', icon: '◉' },
   ];
 
   // 只显示已解锁的入口；若无进度（新玩家），显示"开始调查"引导
@@ -332,8 +337,8 @@ function setupBookmarks(): void {
     el.addEventListener('click', (e) => {
       e.preventDefault();
       const entry = el.dataset.entry!;
-      if (entry === '最近消息') {
-        location.href = './src/pages/ending/index.html';
+      if (entry === '最终抉择') {
+        location.href = './src/pages/ending2/index.html';
       } else {
         enterGame(entry);
       }

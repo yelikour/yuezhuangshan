@@ -29,6 +29,12 @@ export const SITES: Record<PageId, SiteMeta> = {
   backend: { id: 'backend', name: '研讨会工作台', domain: 'conf-backend.yuezhuangshan.cn', url: './src/pages/backend/index.html', node: 'P05', skin: 'backend' },
   backend_records: { id: 'backend_records', name: '门禁与房卡记录', domain: 'conf-backend.yuezhuangshan.cn', url: './src/pages/backend/index.html', node: 'P06', skin: 'backend' },
   ending: { id: 'ending', name: '——', domain: 'localhost', url: './src/pages/ending/index.html', node: 'P07', skin: 'ending' },
+  // 第二阶段
+  lab: { id: 'lab', name: '实验室内网', domain: 'lab.yuezhuangshan.cn', url: './src/pages/lab/index.html', node: 'P08', skin: 'backend' },
+  lab_archive: { id: 'lab_archive', name: '宿主适配性档案', domain: 'lab.yuezhuangshan.cn', url: './src/pages/lab/index.html', node: 'P09', skin: 'backend' },
+  lab_monitor: { id: 'lab_monitor', name: '维护通道监控', domain: 'lab.yuezhuangshan.cn', url: './src/pages/lab/index.html', node: 'P10', skin: 'backend' },
+  identify: { id: 'identify', name: '未知号码', domain: 'diting.app', url: './src/pages/identify/index.html', node: 'P11', skin: 'chat' },
+  ending2: { id: 'ending2', name: '——', domain: 'localhost', url: './src/pages/ending2/index.html', node: 'P12', skin: 'ending' },
 };
 
 /** 虚构平台名一览（避免与现实产品混淆，集中管理） */

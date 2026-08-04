@@ -11,6 +11,9 @@ export const PUZZLE = {
   SEARCH_P02: 'search_p02',
   SEARCH_P04: 'search_p04',
   LOGIN_P05: 'login_p05',
+  LOGIN_P08: 'login_p08',
+  SEARCH_P09: 'search_p09',
+  IDENTIFY_P11: 'identify_p11',
 } as const;
 
 export type PuzzleId = (typeof PUZZLE)[keyof typeof PUZZLE];
@@ -28,6 +31,12 @@ export const DEPENDENCIES: Partial<Record<NodeId, string[]>> = {
   P05: ['PUZZLE:search_p04'], // 解出搜索谜题
   P06: ['NODE:P05', 'PUZZLE:login_p05'], // 登录成功
   P07: ['CLUE:CLUE_KEYCARD_MAINTENANCE'], // 看过房卡记录
+  // 第二阶段
+  P08: ['NODE:P07'], // 看过第一阶段结尾后进入维护通道
+  P09: ['NODE:P08', 'PUZZLE:login_p08'], // 通过 lab 门禁
+  P10: ['NODE:P09'], // 看过档案
+  P11: ['CLUE:CLUE_SHELL_LEFTHAND'], // 发现躯壳破绽
+  P12: ['PUZZLE:identify_p11'], // 分辨出真沈苒
   SIDE_ANNALS: ['NODE:P02'],
   SIDE_HEZONG: ['NODE:P06'],
 };

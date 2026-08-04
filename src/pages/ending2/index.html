@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>——</title>
+  <link rel="stylesheet" href="../../ui/common.css" />
+</head>
+<body class="skin-ending">
+  <main class="page" id="root" hidden>
+    <!-- 选择阶段 -->
+    <section id="choiceView">
+      <h1 id="title" class="will-flicker"></h1>
+      <p class="readable" style="opacity:0.7; margin-bottom:1.5em">
+        沈苒说，把证据带下山。但档案室里还有一把空着的神经连接椅。<br>
+        火柴也在你口袋里。<br>
+        ——你怎么选？
+      </p>
+      <div id="choices"></div>
+    </section>
+
+    <!-- 结果阶段 -->
+    <section id="resultView" hidden>
+      <div id="resultBody" class="readable mail-body"></div>
+      <hr style="margin:1.5em 0; border-color:rgba(255,255,255,0.1)" />
+      <h2 id="closingTitle"></h2>
+      <p class="readable" style="opacity:0.5; margin-top:1em" id="closingNote"></p>
+      <p class="readable" style="margin-top:1em">
+        <a class="btn" href="../../../index.html">返回导航首页</a>
+      </p>
+    </section>
+  </main>
+  <script type="module" src="./main.ts"></script>
+</body>
+</html>

@@ -5,12 +5,14 @@
 
 export type NodeId =
   | 'P00' | 'P01' | 'P02' | 'P03' | 'P04' | 'P05' | 'P06' | 'P07'
+  | 'P08' | 'P09' | 'P10' | 'P11' | 'P12'
   | 'SIDE_ANNALS' // 支线：岳氏族谱/县志残页
   | 'SIDE_HEZONG'; // 支线：合奘教宣传页
 
 export type PageId =
   | 'index' | 'mail' | 'scenic' | 'scenic_legend' | 'scenic_annals'
-  | 'chat' | 'news' | 'backend' | 'backend_records' | 'ending';
+  | 'chat' | 'news' | 'backend' | 'backend_records' | 'ending'
+  | 'lab' | 'lab_archive' | 'lab_monitor' | 'identify' | 'ending2';
 
 export interface GameState {
   version: number;

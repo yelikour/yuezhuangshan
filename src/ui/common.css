@@ -213,6 +213,80 @@ body.skin-ending  { background: #000; color: #b8b8b8; }
   border: 1px solid rgba(255,255,255,0.12);
   animation: sfx-fade 3s forwards;
 }
+
+/* ===== lab 站点（实验室内网） ===== */
+.lab-tabs { display: flex; gap: 4px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 1em; }
+.lab-tab {
+  background: transparent; border: none; color: #888; padding: 8px 16px;
+  cursor: pointer; font-size: 13px; border-bottom: 2px solid transparent;
+  font-family: var(--font-mono);
+}
+.lab-tab.active { color: #7fc1ff; border-bottom-color: #7fc1ff; }
+.lab-pre {
+  white-space: pre-wrap; font-family: var(--font-mono); font-size: 0.85em;
+  background: rgba(0,0,0,0.3); padding: 0.8em; border-radius: 4px; color: #9ad;
+  line-height: 1.5; border: 1px solid rgba(120,170,220,0.15);
+}
+/* 监控画面框 */
+.monitor-frame {
+  display: inline-block; padding: 10px; background: #0a0a0a;
+  border: 2px solid #2a2a2a; border-radius: 4px; max-width: 100%;
+}
+.monitor-screen {
+  position: relative; width: 480px; max-width: 100%; aspect-ratio: 4/3;
+  background: #0d0d0d; overflow: hidden;
+}
+.monitor-grain {
+  position: absolute; inset: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 3px 3px; pointer-events: none;
+}
+.monitor-img {
+  width: 100%; height: 100%; object-fit: cover;
+  filter: grayscale(1) contrast(1.2) brightness(0.7);
+  opacity: 0.85;
+}
+.monitor-overlay {
+  position: absolute; top: 6px; left: 8px; right: 8px;
+  display: flex; justify-content: space-between;
+  font-family: var(--font-mono); font-size: 11px; color: #ff5252;
+  text-shadow: 0 0 4px rgba(0,0,0,0.9);
+}
+.monitor-overlay span:first-child { animation: rec-blink 1s infinite; }
+@keyframes rec-blink { 50% { opacity: 0.3; } }
+.reduce-motion .monitor-overlay span:first-child { animation: none; }
+.reduce-motion .will-flicker { animation: none !important; }
+
+/* ===== P11 真假消息选择项 ===== */
+.identify-choice {
+  display: flex; align-items: flex-start; gap: 0.6em;
+  padding: 0.7em 0.9em; margin: 0.5em 0;
+  border: 1px solid rgba(255,255,255,0.12); border-radius: 8px;
+  cursor: pointer; transition: all .15s; line-height: 1.6;
+}
+.identify-choice:hover { background: rgba(255,255,255,0.04); border-color: rgba(127,193,255,0.4); }
+.identify-choice input { margin-top: 4px; accent-color: #7fc1ff; }
+.identify-choice.chosen {
+  background: rgba(127,193,255,0.10); border-color: #7fc1ff;
+  box-shadow: 0 0 0 1px rgba(127,193,255,0.3);
+}
+
+/* ===== P12 三结局选择项 ===== */
+.ending-choice {
+  display: flex; align-items: center; gap: 1em;
+  padding: 1.1em 1.3em; margin: 0.8em 0;
+  border: 1px solid rgba(255,255,255,0.15); border-radius: 10px;
+  cursor: pointer; transition: all .2s; background: rgba(255,255,255,0.02);
+}
+.ending-choice:hover {
+  background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.35);
+  transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+}
+.ending-choice-num {
+  font-size: 1.6em; color: #6a6a6a; font-weight: 300; min-width: 1.2em;
+}
+.ending-choice-label { font-size: 1.1em; font-weight: 600; color: #d8d8d8; }
+.ending-choice-desc { font-size: 0.88em; color: #888; margin-top: 4px; line-height: 1.5; }
 @keyframes sfx-fade {
   0% { opacity: 0; transform: translateX(-50%) translateY(8px); }
   10% { opacity: 1; transform: translateX(-50%) translateY(0); }

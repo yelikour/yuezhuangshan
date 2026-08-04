@@ -17,6 +17,15 @@ export const CLUE = {
   TAMPERED_REPORT: 'CLUE_TAMPERED_REPORT',
   KEYCARD_MAINTENANCE: 'CLUE_KEYCARD_MAINTENANCE',
   FAKE_RETURN: 'CLUE_FAKE_RETURN',
+  // 第二阶段
+  LAB_ACCESS: 'CLUE_LAB_ACCESS',
+  LIN_XUZHI: 'CLUE_LIN_XUZHI',
+  PROTAGONIST_VESSEL: 'CLUE_PROTAGONIST_VESSEL',
+  SHENRAN_DECOY: 'CLUE_SHENRAN_DECOY',
+  MOTHER_CANT_LEAVE: 'CLUE_MOTHER_CANT_LEAVE',
+  SHELL_LEFTHAND: 'CLUE_SHELL_LEFTHAND',
+  HALF_SHENRAN: 'CLUE_HALF_SHENRAN',
+  ONLY_WAY_OUT: 'CLUE_ONLY_WAY_OUT',
 } as const;
 
 /**
@@ -28,6 +37,8 @@ export const ANSWERS = {
   LOGIN_ACCOUNT: normalizeInput('protagonist@yuezhuangshan-conf.cn'),
   /** P05 后台登录口令 = 参会证后四位 + 研讨会拼音首字母 */
   LOGIN_PASSWORD: normalizeInput('0427ywyxxsc'),
+  /** P08 lab 门禁：林叙之(LXZ) + 工位 B-07 */
+  LAB_ACCESS_CODE: normalizeInput('lxzb07'),
 } as const;
 
 /** P02 景区官网搜索命中词 */
@@ -142,4 +153,144 @@ export const HINTS: Record<string, string[]> = {
     '口令 = 参会证后四位 + 研讨会名称拼音首字母。沈苒在聊天里提过你的尾号。',
     '尾号 0427，研讨会"地方异闻与悬疑叙事创作"取首字母 ywyxxsc，合起来输入。',
   ],
+  login_p08: [
+    '门禁要的是"本实验室负责人"的身份码。',
+    '访客登记表里有负责人的姓名，工位分布图能查到他的编号。',
+    '负责人是林叙之（拼音首字母 LXZ），工位 B-07。输入 lxzb07。',
+  ],
+  search_p09: [
+    '档案里应该有关于"主体"局限性的实验记录。',
+    '试试搜"离山""根脉""容器"这类词。',
+    '输入"离山"，看实验日志里关于主体无法脱离根脉的记录。',
+  ],
+  identify_p11: [
+    '真正的沈苒会知道只有你们俩才懂的私密小事。',
+    '想想她在聊天里提过的、关于家里的小细节。',
+    '她养了一只猫叫"芝麻"。选提到芝麻的那条消息。',
+  ],
 } as const;
+
+/** P09 实验室档案检索库 */
+export interface ArchiveDoc {
+  id: string;
+  title: string;
+  code: string;
+  level: string; // 密级
+  snippet: string;
+  matchKeywords: string[];
+  isKey?: boolean;
+  body?: string;
+}
+
+export const ARCHIVE_DB: ArchiveDoc[] = [
+  {
+    id: 'mother_limit',
+    title: '实验日志：主体迁移局限性验证',
+    code: 'EXP-2024-0173',
+    level: '机密',
+    snippet: '……主体无法脱离根脉网络，离山实验再次失败。孢子离山 72 小时后全部失活……',
+    matchKeywords: ['离山', '根脉', '容器', '主体', '迁移'],
+    isKey: true,
+    body: `【实验日志 EXP-2024-0173 · 机密】
+课题：主体迁移局限性验证
+执行人：林叙之
+日期：2024-08-15
+
+实验记录：
+第 14 次尝试将主体孢子样本带离岳桩山根脉范围。样本在离山 72 小时后全部失活，与此前 13 次结果一致。
+
+结论：
+主体无法脱离根脉网络。其意识分布于整片地下生态，无法压缩进单一孢子。
+唯一可能的离山方式：寻找神经适配性达 S 级的人类宿主，将"记忆核心"注入其神经系统，由宿主携带出山。
+
+备注：
+主体对此结论表现出"焦虑"——它会模仿人类情绪了。这是好迹象，说明它的神经模仿能力在进步。
+——林叙之`,
+  },
+  {
+    id: 'vessel_eval',
+    title: '宿主适配性评估报告（年度）',
+    code: 'EVL-2026-0009',
+    level: '绝密',
+    snippet: '……编号 P-09：适配性 S 级（理想容器）。编号 S-04：适配性 B 级，用途：诱饵……',
+    matchKeywords: ['容器', '适配', '评估', '诱饵', '宿主'],
+    isKey: true,
+    body: `【宿主适配性评估报告 EVL-2026-0009 · 绝密】
+评估周期：2026 年度研讨会候选对象
+评估方法：神经整合力测试 + 人格承载力分析
+
+编号 P-09（推理小说作者，本届研讨会受邀者）：
+  适配性评级：S（理想容器）
+  评估依据：具备极强的矛盾信息整合能力与多视角人格模拟能力。
+  神经系统对复合记忆的承载力预测值达历史最高。
+  建议用途：[数据删除] —— 但主体已多次表示"渴望"。
+
+编号 S-04（沈苒，P-09 同伴）：
+  适配性评级：B（中等）
+  评估依据：神经整合力普通，不足以承载记忆核心。
+  建议用途：诱饵——用于引导 P-09 进入根脉范围。
+  状态：已执行。
+
+—— 林叙之 / 岳桩生态文化发展有限公司 研究部`,
+  },
+  {
+    id: 'fire_test',
+    title: '燃烧实验：表层网络耐热性',
+    code: 'EXP-2023-0089',
+    level: '内部',
+    snippet: '……明火可毁坏表层菌丝网络与实验室样本，但地下主体未受影响，3 周内再生……',
+    matchKeywords: ['火', '燃烧', '再生', '表层'],
+  },
+  {
+    id: 'religion_study',
+    title: '合奘教教义的人类学分析',
+    code: 'SOC-2022-0034',
+    level: '公开',
+    snippet: '……"合奘"教义中"肉身归山、记忆合一"的表述，与主体吸收宿主记忆的生物过程高度吻合……',
+    matchKeywords: ['合奘', '教义', '宗教', '记忆合一'],
+  },
+  {
+    id: 'three_year',
+    title: '三年周期与生态管理的对应关系',
+    code: 'ECO-2021-0056',
+    level: '内部',
+    snippet: '……每三年一次的"送老"传统，实为主体对衰老个体的定期吸收，以维持根脉养分……',
+    matchKeywords: ['三年', '周期', '生态', '传统'],
+  },
+];
+
+/** P11 半沈苒真假消息集合。player 需选出真正沈苒说的那条。 */
+export interface HalfMessage {
+  id: string;
+  text: string;
+  /** true = 真沈苒（基于私密记忆）；false = 母体模仿 */
+  isReal: boolean;
+}
+
+export const HALF_MESSAGES: HalfMessage[] = [
+  {
+    id: 'm1',
+    text: '你还记得我们第一次见面吗？那天下了很大的雨，你把伞让给了我。',
+    isReal: false,
+  },
+  {
+    id: 'm2',
+    text: '芝麻今天又把杯子推下桌了……不对，我在山上，它在家。我只是突然好想它。',
+    isReal: true, // 提到只有两人知道的猫"芝麻"
+  },
+  {
+    id: 'm3',
+    text: '我们本该一起去很多地方的。回来吧，我们重新开始，一切都会好的。',
+    isReal: false,
+  },
+  {
+    id: 'm4',
+    text: '我能感觉到它在读我。但有些事它读不到——那些太小的、太琐碎的记忆，它觉得不重要。',
+    isReal: true,
+  },
+  {
+    id: 'm5',
+    text: '听我说，你是我见过最好的人。别管我了，去过你自己的生活，忘记这里。',
+    isReal: false,
+  },
+];

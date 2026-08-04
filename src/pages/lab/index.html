@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>实验室内网</title>
+  <link rel="stylesheet" href="../../ui/common.css" />
+</head>
+<body>
+  <main class="page" id="root" hidden>
+    <h1 id="labTitle"></h1>
+    <p class="readable" style="opacity:0.6" id="labSub">维护通道终端 · 地下 B2 层</p>
+
+    <!-- 视图切换 tabs -->
+    <div class="lab-tabs" id="labTabs" hidden>
+      <button class="lab-tab active" data-view="archive">档案检索</button>
+      <button class="lab-tab" data-view="monitor">监控回放</button>
+    </div>
+
+    <!-- P08 门禁视图 -->
+    <section id="doorView">
+      <h2 id="doorHint"></h2>
+      <div class="readable" style="display:grid; grid-template-columns:1fr 1fr; gap:1em; margin:1em 0">
+        <div><h3>访客登记表</h3><pre id="visitorLog" class="lab-pre"></pre></div>
+        <div><h3>工位分布图</h3><pre id="workstationMap" class="lab-pre"></pre></div>
+      </div>
+      <p class="readable" id="doorPrompt"></p>
+      <div style="display:flex; gap:0.5em; align-items:center">
+        <input type="text" id="doorCode" class="input" placeholder="身份码" autocomplete="off" />
+        <button class="btn" id="doorBtn">验证</button>
+        <button class="btn" id="hintBtn">我卡住了</button>
+      </div>
+      <div id="err" class="error-msg"></div>
+      <div id="hintArea"></div>
+    </section>
+
+    <!-- P09 档案视图 -->
+    <section id="archiveView" hidden>
+      <h2 id="archiveTitle"></h2>
+      <div style="display:flex; gap:0.5em; flex-wrap:wrap">
+        <input type="text" id="archiveSearch" class="input" placeholder="检索关键词（如：离山、容器、根脉）" />
+        <button class="btn" id="archiveBtn">检索</button>
+        <button class="btn" id="hintBtn2">我卡住了</button>
+      </div>
+      <div id="archiveHintArea"></div>
+      <div id="archiveResults" class="readable" style="margin-top:1em"></div>
+      <div id="archiveDetail" hidden style="margin-top:1.5em; border:1px solid rgba(255,255,255,0.15); padding:1em; background:rgba(0,0,0,0.3)">
+        <button class="btn" id="closeArchiveDetail" style="float:right">关闭</button>
+        <div id="archiveDetailBody" class="mail-body readable"></div>
+      </div>
+      <div id="afterArchive" class="readable" hidden style="margin-top:1.5em">
+        <p>你看到了：<strong>你自己的名字</strong>，评级 S，"理想容器"。而沈苒是 B 级——"诱饵"。</p>
+        <p>它从一开始，就是用她把你钓进来的。</p>
+        <p style="margin-top:1em">还有监控。02:11 那段——你想看看，走进去的是不是真的她。</p>
+        <p><button class="btn" id="goMonitor">查看监控回放</button></p>
+      </div>
+    </section>
+
+    <!-- P10 监控视图 -->
+    <section id="monitorView" hidden>
+      <h2 id="monitorTitle"></h2>
+      <div id="monitorPlayer" class="monitor-frame">
+        <div class="monitor-screen will-flicker" id="monitorScreen">
+          <div class="monitor-grain"></div>
+          <img id="monitorImg" class="monitor-img" alt="02:11 监控画面" />
+          <div class="monitor-overlay">
+            <span>REC ●</span>
+            <span id="monitorStamp">02:11:00</span>
+          </div>
+        </div>
+      </div>
+      <p class="readable" id="monitorNote" style="margin-top:1em"></p>
+      <div id="afterMonitor" class="readable" hidden style="margin-top:1.5em">
+        <h2>那不是她</h2>
+        <p>画面里的人用<strong>左手</strong>按下了闸机。</p>
+        <p>但沈苒是右撇子——她在聊天里说过，"我用右手写字总蹭脏袖口"。</p>
+        <p>走进去的是她的身体，但不是她。是它，穿着她。</p>
+        <p class="will-flicker">你的手机又震了。一个未知号码。</p>
+        <p style="margin-top:1em"><a class="btn" id="goChat2" href="../identify/index.html">查看消息</a></p>
+      </div>
+    </section>
+  </main>
+  <script type="module" src="./main.ts"></script>
+</body>
+</html>
