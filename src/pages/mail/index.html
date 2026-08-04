@@ -10,20 +10,12 @@
   <main class="page" id="root" hidden>
     <h1>云雁邮 · 收件箱</h1>
     <p class="readable" style="opacity:0.6">收件人：我（研讨会受邀创作者）</p>
+    <p id="readHint" class="readable" style="opacity:0.7; font-size:0.9em; min-height:1.2em"></p>
 
     <div style="display:grid; grid-template-columns: 1fr 2fr; gap:1em;">
       <div class="mail-list" id="mailList"></div>
       <div id="mailView" class="readable"></div>
     </div>
-
-    <hr style="margin:2em 0; border-color:rgba(255,255,255,0.1)" />
-    <h2>调查入口</h2>
-    <p class="readable">已记下会议账号与口令规则？接下来你可以从这几处开始调查：</p>
-    <ul class="readable">
-      <li><a class="btn" id="goScenic" href="../scenic/index.html">岳桩山景区官网</a> —— 了解岳圣桩与三年一度的传说。</li>
-      <li><a class="btn" id="goChat" href="../chat/index.html">谛听（聊天）</a> —— 看看沈苒最后的消息。</li>
-    </ul>
-    <p class="readable" style="margin-top:1em"><span id="readHint"></span></p>
   </main>
 
   <script type="module" src="./main.ts"></script>

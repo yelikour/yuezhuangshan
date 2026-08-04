@@ -2,7 +2,7 @@
  * P01 虚构邮箱：邀请函、日程、入住资料、干扰邮件。
  * 阅读后解锁相应线索，并开放景区/聊天两个调查入口。
  */
-import { bootstrap, escapeHtml, relTo } from '@shared/bootstrap';
+import { bootstrap, escapeHtml } from '@shared/bootstrap';
 import { discoverClue, unlock } from '@shared/progress';
 import { CLUE } from '@data/clues';
 import { MAIL } from '@data/content';
@@ -91,13 +91,12 @@ function updateHint(): void {
   const hasInvite = readSet.has('invite');
   const hasCheckin = readSet.has('checkin');
   if (!hasInvite) {
-    hint.textContent = '建议先阅读"邀请函"。';
+    hint.textContent = '有 1 封未读邮件。';
   } else if (!hasCheckin) {
-    hint.textContent = '别忘了阅读"入住资料"——里面有登录会议后台需要的信息。';
+    hint.textContent = '入住资料里似乎还有会议系统的登录说明。';
   } else {
-    hint.innerHTML = `已阅读关键邮件。可前往
-      <a class="btn" href="${relTo('scenic')}">景区官网</a> 或
-      <a class="btn" href="${relTo('chat')}">聊天</a> 继续调查。`;
+    // 读完后不引导跳转——让玩家自行决定下一步（沉浸感）
+    hint.textContent = '';
   }
 }
 

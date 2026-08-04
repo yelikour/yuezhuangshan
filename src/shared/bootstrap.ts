@@ -48,7 +48,8 @@ function renderFauxBar(brand: string, domain: string): HTMLElement {
 /** 相对路径回到站点根的 index.html */
 function rel(page: 'index' | 'mail' | 'scenic' | 'chat' | 'news' | 'backend' | 'ending'): string {
   const map: Record<string, string> = {
-    index: '../../index.html',
+    // 从 src/pages/xxx/ 回到项目根 index.html 需退 3 级：xxx→pages→src→根
+    index: '../../../index.html',
     mail: '../mail/index.html',
     scenic: '../scenic/index.html',
     chat: '../chat/index.html',

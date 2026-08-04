@@ -31,59 +31,59 @@ interface NavLink {
 }
 
 const NAV: Record<string, NavLink[]> = {
-  // 常用网站（全是无害占位）
+  // 常用网站
   common: [
-    { name: '搜索引擎', icon: '🔍', color: '#2b6cff', url: '#' },
+    { name: '搜索引擎', icon: '🔍', color: '#2b6cff', url: 'https://www.baidu.com' },
     { name: '云雁邮', icon: '✉', color: '#ff8a00', game: true, badge: 1 },
-    { name: '导航犬', icon: '🐕', color: '#52c41a', url: '#' },
-    { name: '网址大全', icon: '🌐', color: '#13c2c2', url: '#' },
-    { name: '万年历', icon: '📅', color: '#722ed1', url: '#' },
-    { name: '天气预报', icon: '🌤', color: '#1890ff', url: '#' },
+    { name: '导航犬', icon: '🐕', color: '#52c41a', url: 'https://www.hao123.com' },
+    { name: '网址大全', icon: '🌐', color: '#13c2c2', url: 'https://www.2345.com' },
+    { name: '万年历', icon: '📅', color: '#722ed1', url: 'https://wannianli.tianqi.com' },
+    { name: '天气预报', icon: '🌤', color: '#1890ff', url: 'https://weather.cma.cn' },
   ],
   // 新闻资讯（游戏入口藏这里：岳桩资讯）
   news: [
     { name: '岳桩资讯', icon: '📰', color: '#cf1322', game: true },
-    { name: '头条热点', icon: '🔴', color: '#f5222d', url: '#' },
-    { name: '国内要闻', icon: '📢', color: '#fa541c', url: '#' },
-    { name: '科技频道', icon: '💡', color: '#1890ff', url: '#' },
-    { name: '财经动态', icon: '📈', color: '#52c41a', url: '#' },
-    { name: '体育赛事', icon: '⚽', color: '#fa8c16', url: '#' },
+    { name: '头条热点', icon: '🔴', color: '#f5222d', url: 'https://www.toutiao.com' },
+    { name: '国内要闻', icon: '📢', color: '#fa541c', url: 'https://news.sina.com.cn' },
+    { name: '科技频道', icon: '💡', color: '#1890ff', url: 'https://www.36kr.com' },
+    { name: '财经动态', icon: '📈', color: '#52c41a', url: 'https://finance.eastmoney.com' },
+    { name: '体育赛事', icon: '⚽', color: '#fa8c16', url: 'https://sports.sina.com.cn' },
   ],
   // 影视娱乐
   ent: [
-    { name: '在线影视', icon: '🎬', color: '#cf1322', url: '#' },
-    { name: '音乐盒子', icon: '🎵', color: '#722ed1', url: '#' },
-    { name: '小说阅读', icon: '📖', color: '#13c2c2', url: '#' },
+    { name: '在线影视', icon: '🎬', color: '#cf1322', url: 'https://www.bilibili.com' },
+    { name: '音乐盒子', icon: '🎵', color: '#722ed1', url: 'https://music.163.com' },
+    { name: '小说阅读', icon: '📖', color: '#13c2c2', url: 'https://www.qidian.com' },
     { name: '谛听', icon: '💬', color: '#52c41a', game: true },
-    { name: '搞笑段子', icon: '😄', color: '#faad14', url: '#' },
-    { name: '直播平台', icon: '📡', color: '#eb2f96', url: '#' },
+    { name: '搞笑段子', icon: '😄', color: '#faad14', url: 'https://www.qiushibaike.com' },
+    { name: '直播平台', icon: '📡', color: '#eb2f96', url: 'https://live.bilibili.com' },
   ],
   // 生活服务
   life: [
-    { name: '火车票', icon: '🚄', color: '#1890ff', url: '#' },
-    { name: '酒店预订', icon: '🏨', color: '#fa541c', url: '#' },
-    { name: '外卖美食', icon: '🍜', color: '#fa8c16', url: '#' },
-    { name: '招聘求职', icon: '💼', color: '#13c2c2', url: '#' },
-    { name: '房产家居', icon: '🏠', color: '#52c41a', url: '#' },
-    { name: '医院挂号', icon: '⚕', color: '#f5222d', url: '#' },
+    { name: '火车票', icon: '🚄', color: '#1890ff', url: 'https://www.12306.cn' },
+    { name: '酒店预订', icon: '🏨', color: '#fa541c', url: 'https://hotels.ctrip.com' },
+    { name: '外卖美食', icon: '🍜', color: '#fa8c16', url: 'https://www.meituan.com' },
+    { name: '招聘求职', icon: '💼', color: '#13c2c2', url: 'https://www.zhipin.com' },
+    { name: '房产家居', icon: '🏠', color: '#52c41a', url: 'https://www.lianjia.com' },
+    { name: '医院挂号', icon: '⚕', color: '#f5222d', url: 'https://www.guahao.com' },
   ],
   // 旅游出行（游戏主入口：岳桩山景区）
   travel: [
     { name: '岳桩山景区', icon: '⛰', color: '#389e0d', game: true },
-    { name: '游记攻略', icon: '🗺', color: '#13c2c2', url: '#' },
-    { name: '机票查询', icon: '✈', color: '#1890ff', url: '#' },
-    { name: '周边游', icon: '🧳', color: '#fa8c16', url: '#' },
-    { name: '景点门票', icon: '🎫', color: '#cf1322', url: '#' },
-    { name: '户外装备', icon: '🏕', color: '#52c41a', url: '#' },
+    { name: '游记攻略', icon: '🗺', color: '#13c2c2', url: 'https://www.mafengwo.cn' },
+    { name: '机票查询', icon: '✈', color: '#1890ff', url: 'https://flights.ctrip.com' },
+    { name: '周边游', icon: '🧳', color: '#fa8c16', url: 'https://you.ctrip.com' },
+    { name: '景点门票', icon: '🎫', color: '#cf1322', url: 'https://piao.ctrip.com' },
+    { name: '户外装备', icon: '🏕', color: '#52c41a', url: 'https://www.8264.com' },
   ],
-  // 小游戏（占位，不连游戏）
+  // 小游戏
   game: [
-    { name: '益智小游戏', icon: '🧩', color: '#722ed1', url: '#' },
-    { name: '棋牌世界', icon: '🃏', color: '#cf1322', url: '#' },
-    { name: '消除达人', icon: '💎', color: '#13c2c2', url: '#' },
-    { name: '猜谜语', icon: '❓', color: '#faad14', url: '#' },
-    { name: '反应测试', icon: '⚡', color: '#1890ff', url: '#' },
-    { name: '更多游戏', icon: '🎮', color: '#eb2f96', url: '#' },
+    { name: '益智小游戏', icon: '🧩', color: '#722ed1', url: 'https://www.4399.com' },
+    { name: '棋牌世界', icon: '🃏', color: '#cf1322', url: 'https://www.17173.com' },
+    { name: '消除达人', icon: '💎', color: '#13c2c2', url: 'https://www.7k7k.com' },
+    { name: '猜谜语', icon: '❓', color: '#faad14', url: 'https://zhidao.baidu.com' },
+    { name: '反应测试', icon: '⚡', color: '#1890ff', url: 'https://www.4399.com/flash' },
+    { name: '更多游戏', icon: '🎮', color: '#eb2f96', url: 'https://www.3dmgame.com' },
   ],
 };
 
@@ -134,9 +134,10 @@ function renderNav(): void {
     if (!container) continue;
     container.innerHTML = NAV[key].map((link) => {
       const isGame = link.game;
-      // 游戏内入口：若该节点未解锁，仍可点击（邮箱/景区默认开放），其它按门控
-      const href = isGame ? gameUrl(link.name) : '#';
-      return `<a class="nav-item" data-name="${escapeHtml(link.name)}" data-game="${isGame ? '1' : ''}" href="${href}">
+      const href = isGame ? gameUrl(link.name) : link.url ?? '#';
+      // 外部链接在新标签页打开；游戏入口当前页跳转
+      const target = isGame ? '' : ' target="_blank" rel="noopener noreferrer"';
+      return `<a class="nav-item" data-name="${escapeHtml(link.name)}" data-game="${isGame ? '1' : ''}" href="${href}"${target}>
         <div class="nav-icon" style="background:${link.color}">${link.icon}</div>
         <div class="nav-name">${escapeHtml(link.name)}</div>
         ${link.badge ? `<span class="nav-badge">${link.badge}</span>` : ''}
@@ -144,31 +145,13 @@ function renderNav(): void {
     }).join('');
   }
 
-  // 绑定点击
-  document.querySelectorAll<HTMLElement>('.nav-item').forEach((el) => {
+  // 绑定点击：仅游戏入口需 JS 接管（外部链接交给浏览器原生跳转）
+  document.querySelectorAll<HTMLElement>('.nav-item[data-game="1"]').forEach((el) => {
     el.addEventListener('click', (e) => {
-      if (el.dataset.game === '1') {
-        // 游戏入口：走 enterGame，避免直接跳到未解锁页时缺乏门控反馈
-        // （各页面自身也有门控，这里仅决定起点）
-        const name = el.dataset.name!;
-        // 景区/邮箱默认开放；聊天需读完邀请函；资讯需读完失联——
-        // 但首页允许玩家尝试，由目标页面给出"暂无法访问"提示，符合拟真
-        e.preventDefault();
-        enterGame(name);
-      } else {
-        // 占位外链：不真正跳转，给点反馈
-        e.preventDefault();
-        flashSearch(el.dataset.name ?? '');
-      }
+      e.preventDefault();
+      enterGame(el.dataset.name!);
     });
   });
-}
-
-/** 占位外链的装饰性反馈：把网站名塞进搜索框假装在搜 */
-function flashSearch(key: string): void {
-  const input = $('searchInput') as HTMLInputElement;
-  input.value = key;
-  input.focus();
 }
 
 function escapeHtml(s: string): string {
