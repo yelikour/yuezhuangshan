@@ -7,6 +7,7 @@ import { discoverClue, unlock } from '@shared/progress';
 import { CLUE } from '@data/clues';
 import { CHAT } from '@data/content';
 import { IMG } from '@data/assets';
+import { playSfxWithSubtitle } from '@shared/sfx';
 
 const { denied } = bootstrap({
   pageId: 'chat', brand: '谛听', domain: 'diting.app', skin: 'chat', node: 'P03',
@@ -87,6 +88,9 @@ CHAT.messages.forEach((m, i) => {
 });
 
 thread.innerHTML = html;
+
+// 菌斑照片是核心线索，渲染后来一声水滴回声（配合"走廊尽头"氛围，默认静音则无声仅字幕）
+setTimeout(() => playSfxWithSubtitle('waterDrip', { volumeScale: 0.6 }), 500);
 
 // 解锁线索
 discoverClue(CLUE.CREDENTIAL_HINT); // 聊天里泄露的尾号（双线索之二）

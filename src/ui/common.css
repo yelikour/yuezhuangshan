@@ -202,3 +202,21 @@ body.skin-ending  { background: #000; color: #b8b8b8; }
   opacity: 0.45; cursor: not-allowed; text-decoration: line-through;
   pointer-events: none;
 }
+
+/* ===== 音效字幕浮现（sfx.ts 调用） ===== */
+.sfx-subtitle {
+  position: fixed; left: 50%; bottom: 2em; transform: translateX(-50%);
+  background: rgba(0,0,0,0.75); color: #d8d8d8;
+  padding: 0.5em 1.1em; border-radius: 6px;
+  font-size: 0.85em; letter-spacing: 0.5px;
+  z-index: 100; pointer-events: none;
+  border: 1px solid rgba(255,255,255,0.12);
+  animation: sfx-fade 3s forwards;
+}
+@keyframes sfx-fade {
+  0% { opacity: 0; transform: translateX(-50%) translateY(8px); }
+  10% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
+}
+.reduce-motion .sfx-subtitle { animation: none; opacity: 1; }

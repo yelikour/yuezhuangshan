@@ -14,6 +14,10 @@ import labBlur from '../assets/lab_blur.png';
 import favicon from '../assets/favicon.png';
 import mailAvatar from '../assets/mail_avatar.png';
 import newsOldPaper from '../assets/news_old_paper.png';
+import ambientDrone from '../assets/ambient_drone.wav';
+import phoneBuzz from '../assets/phone_buzz.wav';
+import glitchClick from '../assets/glitch_click.wav';
+import waterDrip from '../assets/water_drip.wav';
 
 export const IMG = {
   corridorMold,
@@ -25,4 +29,11 @@ export const IMG = {
   favicon,
   mailAvatar,
   newsOldPaper,
+} as const;
+
+export const SFX = {
+  ambientDrone,
+  phoneBuzz,
+  glitchClick,
+  waterDrip,
 } as const;

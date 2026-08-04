@@ -3,6 +3,7 @@
  * 在每个页面入口调用 applyTheme()，把存档里的设置反映到 DOM。
  */
 import { loadState, updateState, resetState, hasSave } from '@shared/storage';
+import { refreshSfxSettings } from '@shared/sfx';
 
 export function applyTheme(): void {
   const s = loadState();
@@ -18,6 +19,8 @@ export function applyTheme(): void {
     el.volume = s.muted ? 0 : s.volume;
     el.muted = s.muted;
   });
+  // 同步音效系统的设置
+  refreshSfxSettings();
 }
 
 export function setVolume(v: number): void {

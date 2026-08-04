@@ -11,6 +11,7 @@ import { ANSWERS, KEYCARD_LOGS, HINTS, CLUE } from '@data/clues';
 import { BACKEND } from '@data/content';
 import { requestHint, visibleHints } from '@shared/hints';
 import { IMG } from '@data/assets';
+import { playSfxWithSubtitle } from '@shared/sfx';
 
 const { denied } = bootstrap({
   pageId: 'backend', brand: '研讨会工作台', domain: 'conf-backend.yuezhuangshan.cn',
@@ -99,4 +100,6 @@ function showRecords(): void {
   (document.getElementById('surveillanceCap') as HTMLElement).hidden = false;
   (document.getElementById('labImg') as HTMLImageElement).src = IMG.labBlur;
   (document.getElementById('afterRead') as HTMLElement).hidden = false;
+  // "手机震了一下"——播放震动音效（稍延迟，让玩家先读到房卡记录）
+  setTimeout(() => playSfxWithSubtitle('phoneBuzz', { volumeScale: 0.7 }), 1200);
 }

@@ -9,6 +9,7 @@ import { CLUE } from '@data/clues';
 import { ENDING } from '@data/content';
 import { loadState } from '@shared/storage';
 import { IMG } from '@data/assets';
+import { playSfx, stopSfx, showFloatingSubtitle } from '@shared/sfx';
 
 const { denied } = bootstrap({
   pageId: 'ending', brand: '——', domain: 'localhost', skin: 'ending', node: 'P07',
@@ -21,6 +22,15 @@ root.hidden = false;
 
 const s = loadState();
 const reduceMotion = s.reduceMotion;
+
+// 氛围底噪：进入结尾页即循环播放，贯穿整个演出（默认静音时无声，仅字幕）
+playSfx('ambientDrone', {
+  loop: true,
+  volumeScale: 0.55,
+  onSubtitle: (t) => showFloatingSubtitle(t),
+});
+// 页面离开时停止氛围音
+window.addEventListener('pagehide', () => stopSfx('ambientDrone'));
 
 // 消息逐字淡入（reduce-motion 下直接显示）
 const fakeMsgEl = document.getElementById('fakeMsg')!;
@@ -38,6 +48,11 @@ const delay = reduceMotion ? 0 : 60;
 });
 fakeMsgEl.innerHTML = `<div class="chat-time">${ENDING.fakeMessage.time}</div>`;
 fakeMsgEl.appendChild(bubble);
+
+// 消息出现时的"信号接入"故障音（默认静音则无声，仅配合视觉）
+if (!reduceMotion) {
+  setTimeout(() => playSfx('glitchClick', { volumeScale: 0.5 }), 200);
+}
 
 // 文字动画结束后显示照片 + 线索 + 结束页
 const totalDelay = reduceMotion ? 0 : text.length * delay + 700;
