@@ -8,6 +8,7 @@ import { SEARCH_P02_KEYWORDS } from '@data/clues';
 import { SCENIC } from '@data/content';
 import { requestHint, visibleHints } from '@shared/hints';
 import { HINTS } from '@data/clues';
+import { IMG } from '@data/assets';
 
 const { denied } = bootstrap({
   pageId: 'scenic', brand: '岳桩山生态景区', domain: 'yuezhuangshan-scenic.cn', skin: 'scenic', node: 'P02',
@@ -20,6 +21,7 @@ root.hidden = false;
 
 document.getElementById('hero')!.textContent = SCENIC.hero;
 document.getElementById('intro')!.textContent = SCENIC.intro;
+(document.getElementById('heroImg') as HTMLImageElement).src = IMG.mountainMist;
 
 const searchInput = document.getElementById('search') as HTMLInputElement;
 const result = document.getElementById('searchResult')!;
@@ -46,6 +48,7 @@ function showLegend(): void {
   const lp = document.getElementById('legendPage')!;
   lp.hidden = false;
   document.getElementById('legendTitle')!.textContent = SCENIC.legend.title;
+  (document.getElementById('zhuangImg') as HTMLImageElement).src = IMG.yueshengzhuang;
   document.getElementById('legendBody')!.textContent = SCENIC.legend.body;
   document.getElementById('annotation')!.textContent = SCENIC.legend.annotation;
 }

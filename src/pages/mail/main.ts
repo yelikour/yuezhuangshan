@@ -6,6 +6,7 @@ import { bootstrap, escapeHtml, relTo } from '@shared/bootstrap';
 import { discoverClue, unlock } from '@shared/progress';
 import { CLUE } from '@data/clues';
 import { MAIL } from '@data/content';
+import { IMG } from '@data/assets';
 
 const { denied } = bootstrap({
   pageId: 'mail', brand: '云雁邮', domain: 'yunyan.mail', skin: 'mail', node: 'P01',
@@ -40,11 +41,15 @@ const view = document.getElementById('mailView')!;
 
 function renderList(): void {
   list.innerHTML = mails
-    .map(
-      (m) => `<div class="mail-item ${readSet.has(m.id) ? '' : 'unread'}" data-id="${m.id}" tabindex="0" role="button">
-        <div><strong>${escapeHtml(m.subject)}</strong></div>
-        <div style="opacity:0.6; font-size:0.85em">${escapeHtml(m.from)}</div>
-        <div style="opacity:0.5; font-size:0.8em">${escapeHtml(m.date)}</div>
+    .map((m) => `<div class="mail-item ${readSet.has(m.id) ? '' : 'unread'}" data-id="${m.id}" tabindex="0" role="button">
+        <div style="display:flex; gap:0.6em; align-items:center">
+          <img class="mail-avatar" src="${IMG.mailAvatar}" alt="" width="32" height="32" />
+          <div>
+            <div><strong>${escapeHtml(m.subject)}</strong></div>
+            <div style="opacity:0.6; font-size:0.85em">${escapeHtml(m.from)}</div>
+            <div style="opacity:0.5; font-size:0.8em">${escapeHtml(m.date)}</div>
+          </div>
+        </div>
       </div>`,
     )
     .join('');

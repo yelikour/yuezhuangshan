@@ -8,6 +8,7 @@ import { discoverClue } from '@shared/progress';
 import { CLUE } from '@data/clues';
 import { ENDING } from '@data/content';
 import { loadState } from '@shared/storage';
+import { IMG } from '@data/assets';
 
 const { denied } = bootstrap({
   pageId: 'ending', brand: '——', domain: 'localhost', skin: 'ending', node: 'P07',
@@ -42,6 +43,7 @@ fakeMsgEl.appendChild(bubble);
 const totalDelay = reduceMotion ? 0 : text.length * delay + 700;
 setTimeout(() => {
   (document.getElementById('photoRow') as HTMLElement).hidden = false;
+  (document.getElementById('ritualPhoto') as HTMLImageElement).src = IMG.endingRitual;
   discoverClue(CLUE.FAKE_RETURN);
 
   // 照片矛盾细节（逐条淡入或直接显示）

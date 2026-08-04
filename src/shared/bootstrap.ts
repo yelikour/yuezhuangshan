@@ -6,6 +6,18 @@ import { applyTheme } from '@ui/theme';
 import { markVisited, isUnlocked } from './progress';
 import type { PageId, NodeId } from './state';
 import { loadState } from './storage';
+import { IMG } from '@data/assets';
+
+/** 动态注入 favicon（所有页面共享） */
+function injectFavicon(): void {
+  let link = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
+  if (!link) {
+    link = document.createElement('link');
+    link.rel = 'icon';
+    document.head.appendChild(link);
+  }
+  link.href = IMG.favicon;
+}
 
 export interface BootstrapOptions {
   pageId: PageId;
@@ -53,6 +65,7 @@ export function relTo(target: 'index' | 'mail' | 'scenic' | 'chat' | 'news' | 'b
 
 export function bootstrap(opts: BootstrapOptions): { denied: boolean } {
   applyTheme();
+  injectFavicon();
   document.body.classList.add(`skin-${opts.skin}`);
 
   // 访问校验：未解锁则不展示内容（但仍渲染条 + 提示），避免硬墙造成"无提示谜题"

@@ -8,8 +8,17 @@
 import { loadState, hasSave, updateState } from '@shared/storage';
 import { unlock, markVisited } from '@shared/progress';
 import { setVolume, setMuted, setReduceMotion, setSubtitles, applyTheme } from '@ui/theme';
+import { IMG } from '@data/assets';
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+
+// 注入 favicon
+(() => {
+  const link = document.querySelector<HTMLLinkElement>('link[rel="icon"]') ?? document.createElement('link');
+  link.rel = 'icon';
+  link.href = IMG.favicon;
+  if (!link.parentElement) document.head.appendChild(link);
+})();
 
 /** 导航数据：大部分是无害占位，少数是游戏内站点（带 game: true） */
 interface NavLink {

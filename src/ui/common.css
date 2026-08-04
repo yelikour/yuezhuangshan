@@ -114,9 +114,27 @@ body.skin-backend { background: #0c0c0f; color: #c9ccd2; font-family: var(--font
 body.skin-ending  { background: #000; color: #b8b8b8; }
 
 /* ===== 邮件列表/正文 ===== */
+.mail-avatar { border-radius: 6px; flex-shrink: 0; }
 .mail-list .mail-item { padding: 0.6em 0.4em; border-bottom: 1px solid rgba(255,255,255,0.08); cursor: pointer; }
 .mail-list .mail-item.active { background: rgba(255,255,255,0.06); }
 .mail-body { white-space: pre-wrap; padding: 0.6em 0; }
+
+/* ===== 景区官网 hero + 传说页照片 ===== */
+.scenic-hero { position: relative; margin: -0.5em -1.2em 1em; border-radius: 8px; overflow: hidden; }
+.scenic-hero-img {
+  display: block; width: 100%; max-height: 240px; object-fit: cover;
+  filter: brightness(0.55);
+}
+.scenic-hero h1 {
+  position: absolute; left: 0; right: 0; bottom: 0.6em;
+  margin: 0; padding: 0 1.2em;
+  font-size: 1.5em; text-shadow: 0 2px 8px rgba(0,0,0,0.9);
+}
+.scenic-photo {
+  display: block; width: 100%; max-width: 520px;
+  border-radius: 6px; margin: 0.8em 0;
+  border: 1px solid rgba(255,255,255,0.1);
+}
 
 /* ===== 景区传说页 ===== */
 .legend-page .annotation {
@@ -137,8 +155,14 @@ body.skin-ending  { background: #000; color: #b8b8b8; }
 }
 .chat-time { font-size: 0.75em; opacity: 0.5; }
 
-/* ===== 异常照片（SVG 占位：对称菌斑） ===== */
-.photo-mold { display: block; background: #1a1a1a; border: 1px solid #333; }
+/* ===== 异常照片（真实图片） ===== */
+.photo-mold {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
 .photo-stamp {
   font-family: var(--font-mono); font-size: 0.75em; opacity: 0.6;
   margin-top: 0.3em;

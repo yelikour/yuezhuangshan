@@ -10,6 +10,7 @@ import { checkPassword } from '@shared/normalize';
 import { ANSWERS, KEYCARD_LOGS, HINTS, CLUE } from '@data/clues';
 import { BACKEND } from '@data/content';
 import { requestHint, visibleHints } from '@shared/hints';
+import { IMG } from '@data/assets';
 
 const { denied } = bootstrap({
   pageId: 'backend', brand: '研讨会工作台', domain: 'conf-backend.yuezhuangshan.cn',
@@ -94,5 +95,8 @@ function showRecords(): void {
 
   discoverClue(CLUE.KEYCARD_MAINTENANCE);
   unlock('P07');
+  // 显示关联监控截图
+  (document.getElementById('surveillanceCap') as HTMLElement).hidden = false;
+  (document.getElementById('labImg') as HTMLImageElement).src = IMG.labBlur;
   (document.getElementById('afterRead') as HTMLElement).hidden = false;
 }

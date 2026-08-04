@@ -7,6 +7,7 @@ import { discoverClue, unlock, markSolved, PUZZLE } from '@shared/progress';
 import { matchSearch } from '@shared/normalize';
 import { NEWS_DB, HINTS, CLUE } from '@data/clues';
 import { NEWS } from '@data/content';
+import { IMG } from '@data/assets';
 import { requestHint, visibleHints } from '@shared/hints';
 
 const { denied } = bootstrap({
@@ -58,11 +59,15 @@ function doSearch(): void {
 function showDetail(id: string): void {
   const it = NEWS_DB.find((x) => x.id === id)!;
   detail.hidden = false;
+  const paperStyle = it.isKey
+    ? `background-image:url(${IMG.newsOldPaper}); background-blend-mode:multiply; background-size:cover; background-color:rgba(20,20,20,0.88);`
+    : '';
   detailBody.innerHTML = `
     <h2>${escapeHtml(it.title)}</h2>
     <div style="opacity:0.6">${escapeHtml(it.source)} · ${escapeHtml(it.date)}</div>
     <div style="margin-top:0.6em">${escapeHtml(it.body ?? it.snippet)}</div>
   `;
+  (detailBody as HTMLElement).setAttribute('style', paperStyle);
   if (it.isKey) {
     // 发现关键剧情项 → 解锁
     discoverClue(CLUE.TAMPERED_REPORT);
