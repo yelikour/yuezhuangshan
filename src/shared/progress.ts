@@ -39,6 +39,7 @@ export const DEPENDENCIES: Partial<Record<NodeId, string[]>> = {
   P12: ['PUZZLE:identify_p11'], // 分辨出真沈苒
   SIDE_ANNALS: ['NODE:P02'],
   SIDE_HEZONG: ['NODE:P06'],
+  SIDE_FORUM: ['NODE:P02'], // 论坛随景区一起开放
 };
 
 function meetsConditions(s: GameState, conditions: string[]): boolean {

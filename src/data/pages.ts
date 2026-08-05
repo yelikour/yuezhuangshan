@@ -15,7 +15,7 @@ export interface SiteMeta {
   /** 所属节点 */
   node: NodeId;
   /** CSS 皮肤变量组名 */
-  skin: 'mail' | 'scenic' | 'chat' | 'news' | 'backend' | 'ending' | 'system';
+  skin: 'mail' | 'scenic' | 'chat' | 'news' | 'backend' | 'ending' | 'system' | 'hezong' | 'forum';
 }
 
 export const SITES: Record<PageId, SiteMeta> = {
@@ -35,6 +35,9 @@ export const SITES: Record<PageId, SiteMeta> = {
   lab_monitor: { id: 'lab_monitor', name: '维护通道监控', domain: 'lab.yuezhuangshan.cn', url: './src/pages/lab/index.html', node: 'P10', skin: 'backend' },
   identify: { id: 'identify', name: '未知号码', domain: 'diting.app', url: './src/pages/identify/index.html', node: 'P11', skin: 'chat' },
   ending2: { id: 'ending2', name: '——', domain: 'localhost', url: './src/pages/ending2/index.html', node: 'P12', skin: 'ending' },
+  // 支线站点
+  hezong: { id: 'hezong', name: '合奘 · 归山合一', domain: 'hezong-teachings.cn', url: './src/pages/hezong/index.html', node: 'SIDE_HEZONG', skin: 'hezong' },
+  forum: { id: 'forum', name: '岳桩村乡邻论坛', domain: 'yuezhuang-cun.cn', url: './src/pages/forum/index.html', node: 'SIDE_FORUM', skin: 'forum' },
 };
 
 /** 虚构平台名一览（避免与现实产品混淆，集中管理） */

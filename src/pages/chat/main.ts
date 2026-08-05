@@ -107,3 +107,19 @@ sum.innerHTML = `
   <li>21:03 "我去走廊尽头看看"—— 此后离线。</li>
   <li>参会证尾号 0427（19:15 消息）—— 登录后台可能用得上。</li>
 `;
+
+// 历史记录展开
+const historyArea = document.getElementById('historyArea')!;
+const historyMsgs = document.getElementById('historyMsgs')!;
+historyMsgs.innerHTML = CHAT.historyMessages.map((m) =>
+  `<div class="chat-msg her">
+    <div class="chat-time">${m.time}</div>
+    <div class="bubble">${escapeHtml(m.text)}</div>
+  </div>`,
+).join('');
+document.getElementById('toggleHistory')!.addEventListener('click', (e) => {
+  const btn = e.target as HTMLElement;
+  const shown = !historyArea.hidden;
+  historyArea.hidden = shown;
+  btn.textContent = shown ? '查看更早的记录 ▾' : '收起更早的记录 ▴';
+});

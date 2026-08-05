@@ -113,6 +113,55 @@ body.skin-news    { background: #15171a; color: #d6d8db; }
 body.skin-backend { background: #0c0c0f; color: #c9ccd2; font-family: var(--font-mono); font-size: 0.95em; }
 body.skin-ending  { background: #000; color: #b8b8b8; }
 
+/* 合奘教：表面治愈、温和，米白偏暖，细读发凉 */
+body.skin-hezong {
+  background: linear-gradient(180deg, #f5f0e8 0%, #ede6d8 100%);
+  color: #3a3530;
+}
+.skin-hezong .readable { color: #3a3530; }
+.hezong-header { text-align: center; padding: 1.5em 0 0.5em; }
+.hezong-header h1 { font-size: 2em; color: #6b5d4f; margin: 0; letter-spacing: 4px; }
+.hezong-slogan { color: #8a7a66; font-style: italic; margin: 0.5em 0; letter-spacing: 2px; }
+.hezong-nav {
+  display: flex; gap: 4px; flex-wrap: wrap; justify-content: center;
+  border-bottom: 1px solid #d6cdb8; padding-bottom: 0.5em; margin-bottom: 1.5em;
+}
+.hezong-nav-btn {
+  background: transparent; border: none; color: #8a7a66; padding: 8px 14px;
+  cursor: pointer; font-size: 14px; border-radius: 6px; transition: all .15s;
+}
+.hezong-nav-btn:hover { background: rgba(107,93,79,0.1); color: #6b5d4f; }
+.hezong-nav-btn.active { background: #6b5d4f; color: #f5f0e8; }
+.hezong-body h2 { color: #6b5d4f; border-left: 3px solid #b8a890; padding-left: 10px; }
+.hezong-body .mail-body { line-height: 1.9; font-size: 15px; }
+
+/* 论坛：朴素 BBS 风 */
+body.skin-forum {
+  background: #f0f0f0; color: #333;
+}
+.skin-forum .readable { color: #333; }
+.forum-list { list-style: none; padding: 0; margin: 1em 0; }
+.forum-item {
+  display: grid; grid-template-columns: auto 1fr auto auto; gap: 10px;
+  padding: 10px 12px; border-bottom: 1px solid #ddd; cursor: pointer;
+  transition: background .12s; align-items: center;
+}
+.forum-item:hover { background: #e8e8f0; }
+.forum-cat {
+  font-size: 11px; padding: 2px 8px; border-radius: 10px;
+  background: #e0e0e8; color: #666; white-space: nowrap;
+}
+.forum-title { font-size: 14px; }
+.forum-title.key { color: #c0392b; font-weight: 600; }
+.forum-meta { font-size: 12px; color: #999; white-space: nowrap; }
+.forum-detail {
+  margin-top: 1.5em; border: 1px solid #ccc; background: #fafafa;
+  padding: 1em 1.2em; border-radius: 6px;
+}
+.forum-detail h2 { margin: 0 0 0.3em; }
+.forum-detail .meta { color: #888; font-size: 13px; margin-bottom: 0.8em; }
+.forum-detail .body { white-space: pre-wrap; line-height: 1.8; }
+
 /* ===== 邮件列表/正文 ===== */
 .mail-avatar { border-radius: 6px; flex-shrink: 0; }
 .mail-list .mail-item { padding: 0.6em 0.4em; border-bottom: 1px solid rgba(255,255,255,0.08); cursor: pointer; }

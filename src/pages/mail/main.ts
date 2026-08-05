@@ -28,10 +28,16 @@ interface MailItem {
 }
 
 const mails: MailItem[] = [
+  { id: 'shenranWarn', ...MAIL.shenranWarn },
+  { id: 'peerAuthor', ...MAIL.peerAuthor },
   { id: 'invite', ...MAIL.invite, key: CLUE.INVITE },
   { id: 'schedule', ...MAIL.schedule },
   { id: 'checkin', ...MAIL.checkin, key: CLUE.CREDENTIAL_HINT },
+  { id: 'hotelConfirm', ...MAIL.hotelConfirm },
+  { id: 'preInvite', ...MAIL.preInvite },
+  { id: 'bankStatement', ...MAIL.bankStatement },
   { id: 'spam', ...MAIL.spam },
+  { id: 'awardNotice', ...MAIL.awardNotice },
 ];
 
 let readSet = new Set<string>();

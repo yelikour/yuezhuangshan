@@ -88,3 +88,26 @@ document.getElementById('annalsLink')!.addEventListener('click', (e) => {
 });
 
 renderHints();
+
+// 渲染景点、点评、公告
+document.getElementById('spotsList')!.innerHTML = SCENIC.spots.map((s) =>
+  `<div style="margin:0.6em 0; padding:0.6em 0.8em; border-left:3px solid #389e0d; background:rgba(56,158,13,0.05)">
+    <strong>${escapeHtml(s.name)}</strong> <span style="opacity:0.5; font-size:0.8em">[${s.tag}]</span><br/>
+    <span style="font-size:0.9em">${escapeHtml(s.desc)}</span>
+  </div>`,
+).join('');
+
+document.getElementById('reviewsList')!.innerHTML = SCENIC.reviews.map((r) =>
+  `<div style="margin:0.5em 0; padding:0.5em 0.8em; border-bottom:1px solid rgba(255,255,255,0.08)">
+    <strong>${escapeHtml(r.user)}</strong> <span style="color:#ffd700">${'★'.repeat(r.stars)}${'☆'.repeat(5 - r.stars)}</span>
+    <span style="opacity:0.5; font-size:0.8em"> · ${r.date}</span><br/>
+    <span style="font-size:0.9em">${escapeHtml(r.text)}</span>
+  </div>`,
+).join('');
+
+document.getElementById('noticesList')!.innerHTML = SCENIC.notices.map((n) =>
+  `<details style="margin:0.5em 0; padding:0.5em 0.8em; border:1px solid rgba(255,255,255,0.1); border-radius:4px">
+    <summary style="cursor:pointer"><strong>${escapeHtml(n.title)}</strong> <span style="opacity:0.5; font-size:0.8em">${n.date}</span></summary>
+    <div style="margin-top:0.5em; font-size:0.9em; white-space:pre-wrap">${escapeHtml(n.body)}</div>
+  </details>`,
+).join('');

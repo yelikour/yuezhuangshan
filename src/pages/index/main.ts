@@ -39,6 +39,8 @@ const NAV: Record<string, NavLink[]> = {
     { name: '岳桩资讯', icon: '📰', color: '#cf1322', game: true },
     { name: '研讨会工作台', icon: '🖥', color: '#722ed1', game: true },
     { name: '实验室内网', icon: '⚗', color: '#13c2c2', game: true },
+    { name: '岳桩村论坛', icon: '🏡', color: '#eb2f96', game: true },
+    { name: '合奘教', icon: '🕯', color: '#8a6d3b', game: true },
   ],
   // 常用网站
   common: [
@@ -111,6 +113,8 @@ function gameUrl(name: string): string {
     case '岳桩山景区': return './src/pages/scenic/index.html';
     case '研讨会工作台': return './src/pages/backend/index.html';
     case '实验室内网': return './src/pages/lab/index.html';
+    case '岳桩村论坛': return './src/pages/forum/index.html';
+    case '合奘教': return './src/pages/hezong/index.html';
     default: return './src/pages/mail/index.html';
   }
 }

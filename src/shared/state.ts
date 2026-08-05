@@ -7,12 +7,14 @@ export type NodeId =
   | 'P00' | 'P01' | 'P02' | 'P03' | 'P04' | 'P05' | 'P06' | 'P07'
   | 'P08' | 'P09' | 'P10' | 'P11' | 'P12'
   | 'SIDE_ANNALS' // 支线：岳氏族谱/县志残页
-  | 'SIDE_HEZONG'; // 支线：合奘教宣传页
+  | 'SIDE_HEZONG' // 支线：合奘教宣传页
+  | 'SIDE_FORUM'; // 支线：岳桩村论坛
 
 export type PageId =
   | 'index' | 'mail' | 'scenic' | 'scenic_legend' | 'scenic_annals'
   | 'chat' | 'news' | 'backend' | 'backend_records' | 'ending'
-  | 'lab' | 'lab_archive' | 'lab_monitor' | 'identify' | 'ending2';
+  | 'lab' | 'lab_archive' | 'lab_monitor' | 'identify' | 'ending2'
+  | 'hezong' | 'forum';
 
 export interface GameState {
   version: number;

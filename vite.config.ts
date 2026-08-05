@@ -24,6 +24,10 @@ const entries = {
   identify: resolve(__dirname, 'src/pages/identify/index.html'),
   // 第二阶段：最终结局（P12）
   ending2: resolve(__dirname, 'src/pages/ending2/index.html'),
+  // 支线：合奘教宣传页
+  hezong: resolve(__dirname, 'src/pages/hezong/index.html'),
+  // 支线：岳桩村论坛
+  forum: resolve(__dirname, 'src/pages/forum/index.html'),
 };
 
 export default defineConfig({

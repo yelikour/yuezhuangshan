@@ -26,7 +26,7 @@ export interface BootstrapOptions {
   /** 虚构域名 */
   domain: string;
   /** 皮肤 class */
-  skin: 'mail' | 'scenic' | 'chat' | 'news' | 'backend' | 'ending' | 'system';
+  skin: 'mail' | 'scenic' | 'chat' | 'news' | 'backend' | 'ending' | 'system' | 'hezong' | 'forum';
   /** 该页面所属节点（若未解锁则跳回入口） */
   node: NodeId;
   /** 可选：入口前的提示文案 */
