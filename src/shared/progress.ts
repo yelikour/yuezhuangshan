@@ -108,3 +108,9 @@ export function recordAttempt(puzzle: string): number {
 export function getAttempts(puzzle: string): number {
   return loadState().attempts[puzzle] ?? 0;
 }
+
+/** 节点是否已被【显式解锁】（在 unlockedNodes 列表里），而非"依赖满足可访问"。
+ *  用于邮件等需要"玩家真正到达过某进度"才触发的逻辑。 */
+export function isNodeActive(node: NodeId): boolean {
+  return loadState().unlockedNodes.includes(node);
+}

@@ -9,11 +9,32 @@
 <body>
   <main class="page" id="root" hidden>
     <h1>谛听 · 与<span id="gf"></span></h1>
-    <p class="readable" style="opacity:0.6">最近一次在线：<span id="offline"></span>（已离线）</p>
+    <p class="readable" style="opacity:0.6">最近一次在线：<span id="offline"></span></p>
 
-    <div id="thread"></div>
+    <!-- 参会证尾号泄露（固定在对话前） -->
+    <div class="chat-msg her">
+      <div class="chat-time" id="credTime"></div>
+      <div class="bubble" id="credText"></div>
+    </div>
 
-    <hr style="margin:1.5em 0; border-color:rgba(255,255,255,0.1)" />
+    <!-- 互动对话流（由 JS 逐步填充） -->
+    <div id="dialog"></div>
+
+    <!-- 主角选项区 -->
+    <div id="choicesArea"></div>
+
+    <!-- 对话结束后的状态 -->
+    <div id="dialogEnd" class="readable" hidden style="margin-top:1em; opacity:0.6">
+      <p>—— 此后对方离线 ——</p>
+    </div>
+
+    <!-- 备忘录（含蓄版，替代原"线索整理"） -->
+    <div id="memoArea" hidden style="margin:1.5em 0; padding:1em 1.2em; border:1px solid rgba(255,255,255,0.1); border-radius:6px; background:rgba(0,0,0,0.2)">
+      <p style="opacity:0.5; font-size:0.8em; margin:0 0 0.6em">我的备忘</p>
+      <div id="memoBody" class="readable" style="font-size:0.9em; line-height:1.8; opacity:0.8"></div>
+    </div>
+
+    <!-- 历史记录展开 -->
     <div style="margin:1em 0">
       <button class="btn" id="toggleHistory">查看更早的记录 ▾</button>
     </div>
@@ -21,16 +42,7 @@
       <p style="opacity:0.5; font-size:0.85em">—— 更早的对话 ——</p>
       <div id="historyMsgs"></div>
     </div>
-
-    <div id="afterRead" class="readable" hidden>
-      <h2>线索整理</h2>
-      <ul id="clueSummary"></ul>
-      <p>沈苒提到饮用水有怪味、拍到了墙根对称生长的灰白菌斑，并在 21:03 后失联。</p>
-      <p>她还在聊天里无意提到了你参会证的尾号——记得记下来。</p>
-      <p style="margin-top:1em">下一步：去 <a class="btn" href="../news/index.html">岳桩资讯</a> 搜搜看有没有相关的旧新闻。</p>
-    </div>
   </main>
-
   <script type="module" src="./main.ts"></script>
 </body>
 </html>
