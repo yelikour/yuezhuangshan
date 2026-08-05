@@ -162,12 +162,87 @@ body.skin-forum {
 .forum-detail .meta { color: #888; font-size: 13px; margin-bottom: 0.8em; }
 .forum-detail .body { white-space: pre-wrap; line-height: 1.8; }
 
-/* ===== 邮件列表/正文 ===== */
+/* ===== 邮件列表/正文（Gmail 式左右分栏独立滚动） ===== */
 .mail-avatar { border-radius: 6px; flex-shrink: 0; }
 .mail-dot { color: #ff5252; font-size: 0.7em; }
-.mail-list .mail-item { padding: 0.6em 0.4em; border-bottom: 1px solid rgba(255,255,255,0.08); cursor: pointer; }
-.mail-list .mail-item.active { background: rgba(255,255,255,0.06); }
+
+/* 整体布局：固定视口高度，左右各自滚动 */
+.mail-page { max-width: 1080px; }
+.mail-layout {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 0;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(0,0,0,0.2);
+  /* 固定高度：视口减去上方标题区域 */
+  height: calc(100vh - 200px);
+  min-height: 400px;
+}
+/* 左侧列表区 */
+.mail-list-pane {
+  border-right: 1px solid rgba(255,255,255,0.10);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.mail-list-header {
+  padding: 0.7em 1em;
+  font-weight: 600;
+  font-size: 0.9em;
+  color: #aaa;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  background: rgba(0,0,0,0.25);
+  flex-shrink: 0;
+}
+.mail-list {
+  overflow-y: auto;
+  flex: 1;
+  /* 自定义滚动条 */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.15) transparent;
+}
+.mail-list::-webkit-scrollbar { width: 6px; }
+.mail-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+
+.mail-list .mail-item {
+  padding: 0.65em 0.9em;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  cursor: pointer;
+  transition: background .12s;
+}
+.mail-list .mail-item:hover { background: rgba(255,255,255,0.04); }
+.mail-list .mail-item.active { background: rgba(127,193,255,0.10); border-left: 3px solid #7fc1ff; padding-left: calc(0.9em - 3px); }
+.mail-list .mail-item.unread strong { color: #fff; }
+
+/* 右侧正文区 */
+.mail-view-pane {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.mail-view {
+  overflow-y: auto;
+  flex: 1;
+  padding: 1.2em 1.5em;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.15) transparent;
+}
+.mail-view::-webkit-scrollbar { width: 6px; }
+.mail-view::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+/* 正文空状态 */
+.mail-view-empty {
+  display: flex; align-items: center; justify-content: center;
+  height: 100%; opacity: 0.3; font-size: 0.9em; text-align: center;
+}
 .mail-body { white-space: pre-wrap; padding: 0.6em 0; }
+
+/* 响应式：窄屏改为上下，列表限高 */
+@media (max-width: 680px) {
+  .mail-layout { grid-template-columns: 1fr; grid-template-rows: 200px 1fr; height: calc(100vh - 200px); }
+  .mail-list-pane { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.10); }
+}
 
 /* ===== 景区官网 hero + 传说页照片 ===== */
 .scenic-hero { position: relative; margin: -0.5em -1.2em 1em; border-radius: 8px; overflow: hidden; }

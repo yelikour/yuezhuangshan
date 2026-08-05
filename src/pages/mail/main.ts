@@ -58,6 +58,9 @@ let readSet = new Set<string>();
 const list = document.getElementById('mailList')!;
 const view = document.getElementById('mailView')!;
 
+// 初始空状态
+view.innerHTML = `<div class="mail-view-empty">← 从左侧选择一封邮件查看</div>`;
+
 function renderList(): void {
   const mails = visibleMails();
   list.innerHTML = mails
@@ -98,6 +101,8 @@ function open(id: string): void {
     <h2 style="margin:0.4em 0">${escapeHtml(m.subject)}</h2>
     <div class="mail-body">${escapeHtml(m.body)}</div>
   `;
+  // 正文滚动归零（切换邮件时回到顶部）
+  view.scrollTop = 0;
   // 阅读关键邮件 → 解锁线索 + 开放后续节点
   if (m.key === CLUE.INVITE) {
     discoverClue(CLUE.INVITE);
