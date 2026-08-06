@@ -4,7 +4,7 @@
  */
 import { bootstrap, escapeHtml } from '@shared/bootstrap';
 import {
-  discoverClue, unlock, markSolved, recordAttempt, PUZZLE,
+  discoverClue, unlock, markSolved, recordAttempt, isUnlocked, PUZZLE,
 } from '@shared/progress';
 import { checkPassword } from '@shared/normalize';
 import { ANSWERS, KEYCARD_LOGS, HINTS, CLUE } from '@data/clues';
@@ -76,7 +76,7 @@ function renderHints(): void {
     : '';
 }
 
-function showRecords(): void {
+function showRecords(playReveal = true): void {
   document.getElementById('loginView')!.hidden = true;
   const rv = document.getElementById('recordsView')!;
   rv.hidden = false;
@@ -101,5 +101,10 @@ function showRecords(): void {
   (document.getElementById('labImg') as HTMLImageElement).src = IMG.labBlur;
   (document.getElementById('afterRead') as HTMLElement).hidden = false;
   // "手机震了一下"——播放震动音效（稍延迟，让玩家先读到房卡记录）
-  setTimeout(() => playSfxWithSubtitle('phoneBuzz', { volumeScale: 0.7 }), 1200);
+  if (playReveal) {
+    setTimeout(() => playSfxWithSubtitle('phoneBuzz', { volumeScale: 0.7 }), 1200);
+  }
 }
+
+// 存档后重新进入后台，直接恢复已登录的记录视图，不要求玩家重复输入口令。
+if (isUnlocked('P06')) showRecords(false);

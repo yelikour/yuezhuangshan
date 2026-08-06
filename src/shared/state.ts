@@ -32,6 +32,9 @@ export interface GameState {
   /** 已解谜题 id */
   solvedPuzzles: string[];
 
+  /** 已读邮件 id（用于邮箱未读计数持久化，刷新后不回弹） */
+  readMails: string[];
+
   // 设置
   volume: number; // 0..1
   muted: boolean;
@@ -53,6 +56,7 @@ export function createDefaultState(): GameState {
     attempts: {},
     hintLevel: {},
     solvedPuzzles: [],
+    readMails: [],
     volume: 0.5,
     muted: true, // 默认静音，避免自动播放惊吓
     reduceMotion: false,
@@ -72,5 +76,6 @@ export function mergeState(parsed: Partial<GameState>): GameState {
     discoveredClues: parsed.discoveredClues ?? [],
     unlockedNodes: parsed.unlockedNodes ?? def.unlockedNodes,
     solvedPuzzles: parsed.solvedPuzzles ?? [],
+    readMails: parsed.readMails ?? [],
   };
 }

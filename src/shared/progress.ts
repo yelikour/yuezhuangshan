@@ -114,3 +114,8 @@ export function getAttempts(puzzle: string): number {
 export function isNodeActive(node: NodeId): boolean {
   return loadState().unlockedNodes.includes(node);
 }
+
+/** 谜题是否已经完成，用于页面重载后恢复已完成的内部视图。 */
+export function isSolved(puzzle: string): boolean {
+  return loadState().solvedPuzzles.includes(puzzle);
+}

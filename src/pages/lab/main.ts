@@ -2,7 +2,7 @@
  * P08 门禁 + P09 档案 + P10 监控（lab 站点，三视图 tab 切换）。
  */
 import { bootstrap, escapeHtml } from '@shared/bootstrap';
-import { discoverClue, unlock, markSolved, recordAttempt, PUZZLE } from '@shared/progress';
+import { discoverClue, unlock, markSolved, recordAttempt, isUnlocked, isSolved, PUZZLE } from '@shared/progress';
 import { checkPassword, matchSearch } from '@shared/normalize';
 import { ANSWERS, ARCHIVE_DB, HINTS, CLUE } from '@data/clues';
 import { LAB } from '@data/content';
@@ -147,3 +147,21 @@ function switchView(view: 'archive' | 'monitor'): void {
 labTabs.querySelectorAll('.lab-tab').forEach((t) => {
   t.addEventListener('click', () => switchView((t as HTMLElement).dataset.view as 'archive' | 'monitor'));
 });
+
+function restoreSavedView(): void {
+  // 通过门禁后再次进入实验室，跳过已经完成的门禁。
+  if (!isUnlocked('P09')) return;
+  doorView.hidden = true;
+  archiveView.hidden = false;
+
+  // P10 的逻辑解锁依赖 P09 节点，但只有查阅关键档案后才应显示监控标签。
+  if (isSolved(PUZZLE.SEARCH_P09)) {
+    labTabs.hidden = false;
+    (document.getElementById('afterArchive') as HTMLElement).hidden = false;
+  }
+
+  // 已经看过监控时恢复监控画面和“查看消息”入口。
+  if (isSolved(PUZZLE.SEARCH_P09) && isUnlocked('P11')) switchView('monitor');
+}
+
+restoreSavedView();

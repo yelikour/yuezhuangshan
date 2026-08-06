@@ -4,7 +4,7 @@
  * 演出原则：无 jump-scare，用静态细节的"不对劲"营造不安。
  */
 import { bootstrap, escapeHtml } from '@shared/bootstrap';
-import { discoverClue } from '@shared/progress';
+import { discoverClue, unlock } from '@shared/progress';
 import { CLUE } from '@data/clues';
 import { ENDING } from '@data/content';
 import { loadState } from '@shared/storage';
@@ -75,5 +75,8 @@ setTimeout(() => {
     end.hidden = false;
     document.getElementById('endTitle')!.textContent = ENDING.stageTitle;
     document.getElementById('endSummary')!.textContent = ENDING.stageSummary;
+    // 第一阶段结束 → 开放第二阶段入口（P08 依赖 P07，此时解锁）。
+    // 让首页收藏栏显示"实验室内网"，"继续游戏"能跳到 lab。
+    unlock('P08');
   }, reduceMotion ? 400 : 2600);
 }, totalDelay);

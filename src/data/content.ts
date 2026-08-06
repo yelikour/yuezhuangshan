@@ -3,6 +3,12 @@
  * 与 world_bible.md / timeline.md 保持一致。
  */
 
+/** 游戏内导航站时间，固定在调查开始日，避免随玩家系统日期漂移。 */
+export const GAME_CLOCK = {
+  dateDay: '6月21日 周日',
+  dateLunar: '丙午年 · 六月廿一',
+} as const;
+
 export const MAIL = {
   invite: {
     from: '岳桩生态文化发展有限公司 <invite@yuezhuangshan-conf.cn>',
@@ -318,7 +324,7 @@ export const CHAT = {
 
 export const NEWS = {
   title: '岳桩资讯 · 地方新闻存档检索',
-  placeholder: '输入关键词搜索新闻存档（如：景区、民俗、失踪…）',
+  placeholder: '输入关键词搜索新闻存档（如：景区、民俗、事件类型…）',
 };
 
 export const BACKEND = {

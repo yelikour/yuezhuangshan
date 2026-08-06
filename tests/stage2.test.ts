@@ -85,8 +85,8 @@ describe('P11 真假消息：真沈苒基于"芝麻"私密记忆', () => {
     const m2 = HALF_MESSAGES.find((m) => m.id === 'm2')!;
     expect(m2.isReal).toBe(true);
     expect(m2.text).toContain('芝麻');
-    // 至少有一条是真的
-    expect(HALF_MESSAGES.some((m) => m.isReal)).toBe(true);
+    // 只有 m2 可以作为本题的正确答案，避免任意真消息都能通关
+    expect(HALF_MESSAGES.filter((m) => m.isReal).map((m) => m.id)).toEqual(['m2']);
   });
   it('母体模仿的消息不含"芝麻"等私密细节', () => {
     const fake = HALF_MESSAGES.filter((m) => !m.isReal);

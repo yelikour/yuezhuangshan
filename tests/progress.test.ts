@@ -3,10 +3,10 @@
  */
 import { describe, it, expect, beforeEach } from 'vitest';
 import {
-  isUnlocked, tryUnlock, unlock, discoverClue, markSolved, recordAttempt, PUZZLE,
+  isUnlocked, tryUnlock, unlock, discoverClue, markSolved, isSolved, recordAttempt, PUZZLE,
 } from '@shared/progress';
 import { CLUE } from '@data/clues';
-import { resetState, _resetCacheForTests } from '@shared/storage';
+import { resetState, loadState, updateState, _resetCacheForTests } from '@shared/storage';
 
 beforeEach(() => {
   localStorage.clear();
@@ -45,6 +45,12 @@ describe('节点解锁依赖', () => {
     expect(tryUnlock('P05')).toBe(true);
   });
 
+  it('isSolved 反映谜题完成状态', () => {
+    expect(isSolved(PUZZLE.SEARCH_P09)).toBe(false);
+    markSolved(PUZZLE.SEARCH_P09);
+    expect(isSolved(PUZZLE.SEARCH_P09)).toBe(true);
+  });
+
   it('P06 依赖 P05 节点 + LOGIN_P05 谜题', () => {
     expect(tryUnlock('P06')).toBe(false);
     unlock('P05');
@@ -65,6 +71,18 @@ describe('节点解锁依赖', () => {
     expect(tryUnlock('SIDE_ANNALS')).toBe(true);
   });
 
+  it('P08 依赖 P07；第一阶段结尾必须显式 unlock P08 才能开放第二阶段入口', () => {
+    // 回归守卫：ending/main.ts 在显示 endPage 时调用 unlock('P08')，
+    // 否则首页收藏栏不显示"实验室内网"、"继续游戏"永远回到 P07。
+    expect(tryUnlock('P08')).toBe(false);
+    unlock('P07');
+    // P07 解锁后 P08 依赖满足（tryUnlock 返回 true 并写入 unlockedNodes）
+    expect(tryUnlock('P08')).toBe(true);
+    // 但 ending 页是显式调用 unlock('P08')，确保无论何种路径都写入
+    unlock('P08');
+    expect(isUnlocked('P08')).toBe(true);
+  });
+
   it('resetState 清空所有进度', () => {
     unlock('P01');
     unlock('P02');
@@ -80,5 +98,30 @@ describe('错误尝试计数', () => {
     expect(recordAttempt('login_p05')).toBe(1);
     expect(recordAttempt('login_p05')).toBe(2);
     expect(recordAttempt('login_p05')).toBe(3);
+  });
+});
+
+describe('邮件已读状态持久化', () => {
+  it('默认 readMails 为空数组', () => {
+    const s = loadState();
+    expect(s.readMails).toEqual([]);
+  });
+
+  it('updateState 写入 readMails 后，重载缓存仍可读到', () => {
+    updateState((st) => { st.readMails.push('invite'); st.readMails.push('checkin'); });
+    _resetCacheForTests(); // 模拟"刷新页面"——清内存缓存，强制重读 localStorage
+    expect(loadState().readMails).toEqual(['invite', 'checkin']);
+  });
+
+  it('mergeState 兼容无 readMails 字段的旧存档（补默认空数组）', () => {
+    // 模拟旧版本存档（不含 readMails 字段）
+    localStorage.setItem('yueZhuangShan_save_v1', JSON.stringify({
+      unlockedNodes: ['P00'], discoveredClues: [], solvedPuzzles: [],
+      attempts: {}, hintLevel: {}, visitedPages: [],
+    }));
+    _resetCacheForTests();
+    const s = loadState();
+    expect(s.readMails).toEqual([]);
+    expect(s.unlockedNodes).toEqual(['P00']); // 其它字段不受影响
   });
 });

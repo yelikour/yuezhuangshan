@@ -7,6 +7,7 @@ import { discoverClue, unlock, isNodeActive } from '@shared/progress';
 import { CLUE } from '@data/clues';
 import { MAIL } from '@data/content';
 import { IMG } from '@data/assets';
+import { loadState, updateState } from '@shared/storage';
 import type { NodeId } from '@shared/state';
 
 const { denied } = bootstrap({
@@ -53,7 +54,8 @@ function visibleMails(): MailItem[] {
     .sort((a, b) => (a.date < b.date ? 1 : -1));
 }
 
-let readSet = new Set<string>();
+// 已读邮件集合：从存档加载，刷新后不回弹（持久化于 GameState.readMails）。
+let readSet = new Set<string>(loadState().readMails);
 
 const list = document.getElementById('mailList')!;
 const view = document.getElementById('mailView')!;
@@ -92,6 +94,10 @@ function renderList(): void {
 function open(id: string): void {
   const m = allMails.find((x) => x.id === id)!;
   readSet.add(id);
+  // 持久化已读状态（去重写入，避免 updateState 高频触发）
+  updateState((st) => {
+    if (!st.readMails.includes(id)) st.readMails.push(id);
+  });
   renderList();
   list.querySelectorAll<HTMLElement>('.mail-item').forEach((el) => el.classList.toggle('active', el.dataset.id === id));
   view.innerHTML = `

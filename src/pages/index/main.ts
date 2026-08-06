@@ -9,6 +9,7 @@ import { loadState, hasSave, updateState } from '@shared/storage';
 import { unlock, markVisited } from '@shared/progress';
 import { setVolume, setMuted, setReduceMotion, setSubtitles, applyTheme } from '@ui/theme';
 import { IMG } from '@data/assets';
+import { GAME_CLOCK } from '@data/content';
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 
@@ -252,11 +253,8 @@ function setupMailWidget(): void {
 
 /** 日期小部件 */
 function setupDate(): void {
-  const now = new Date();
-  const week = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][now.getDay()];
-  $('dateDay').textContent = `${now.getMonth() + 1}月${now.getDate()}日 ${week}`;
-  // 虚构农历，仅装饰
-  $('dateLunar').textContent = '丙午年 · 六月廿一';
+  $('dateDay').textContent = GAME_CLOCK.dateDay;
+  $('dateLunar').textContent = GAME_CLOCK.dateLunar;
 }
 
 /* ===== 设置弹层 ===== */

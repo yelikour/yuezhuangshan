@@ -54,7 +54,7 @@
 ```bash
 npm install          # 安装依赖
 npm run typecheck    # 类型检查（tsc --noEmit）
-npm test             # 运行测试（vitest，39 个）
+npm test             # 运行测试（vitest，69 个）
 npm run build        # 类型检查 + 生产构建到 dist/
 npm run dev          # 本地开发服务器（http://localhost:5173）
 npm run preview      # 预览构建产物（http://localhost:4173）
