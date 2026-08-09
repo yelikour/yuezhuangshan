@@ -93,6 +93,8 @@ function showChoices(nodeId: string): void {
     // 对话结束
     choicesEl.innerHTML = '';
     document.getElementById('dialogEnd')!.hidden = false;
+    // 注入对话结束后的剧情化引导（来自 CHAT.afterDialogHint，非 HTML 硬编码）
+    document.getElementById('afterDialogHint')!.textContent = CHAT.afterDialogHint;
     // 显示备忘录
     showMemo();
     // 解锁线索 + 后续节点

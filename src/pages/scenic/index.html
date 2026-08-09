@@ -31,8 +31,8 @@
       <button class="btn" id="searchBtn">搜索</button>
       <button class="btn" id="hintBtn">我卡住了</button>
     </div>
-    <div id="hintArea"></div>
-    <div id="searchResult" class="readable" style="margin-top:1em"></div>
+    <div id="hintArea" aria-live="polite" aria-atomic="true"></div>
+    <div id="searchResult" class="readable" style="margin-top:1em" aria-live="polite"></div>
 
     <div id="legendPage" class="legend-page readable" hidden>
       <h2 id="legendTitle"></h2>

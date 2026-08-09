@@ -197,6 +197,17 @@ describe('搜索题 L3 提示可用性（提示文本本身必须命中目标数
     ).toBe(true);
   });
 
+  it('P09 L3 必须命中 vessel_eval（触发 afterArchive 推进流程的关键档案）', () => {
+    // 回归守卫：真实游玩发现 L3 给"离山"只命中 mother_limit，玩家照抄后仍卡住
+    // （afterArchive 只在打开 vessel_eval 时触发）。L3 必须引导到能触发流程的档案。
+    const hint = HINTS[PUZZLE.SEARCH_P09][2];
+    const hitsVesselEval = matchSearch(hint, ARCHIVE_DB.find((d) => d.id === 'vessel_eval')!.matchKeywords);
+    expect(
+      hitsVesselEval,
+      `P09 L3 必须命中 vessel_eval（原文：${hint}），否则玩家用 L3 后仍无法推进到 P10`,
+    ).toBe(true);
+  });
+
   it('P09 关键档案 mother_limit 的 matchKeywords 覆盖核心检索词', () => {
     // 数据层守卫：防止 matchKeywords 被误删导致 L3 即使文案正确也无法命中。
     const motherLimit = ARCHIVE_DB.find((d) => d.id === 'mother_limit')!;
@@ -204,6 +215,10 @@ describe('搜索题 L3 提示可用性（提示文本本身必须命中目标数
     expect(motherLimit.matchKeywords).toContain('离山');
     expect(motherLimit.matchKeywords).toContain('根脉');
     expect(motherLimit.matchKeywords).toContain('容器');
+    // vessel_eval 数据守卫：它是触发 afterArchive 的档案，matchKeywords 不能丢
+    const vesselEval = ARCHIVE_DB.find((d) => d.id === 'vessel_eval')!;
+    expect(vesselEval.isKey).toBe(true);
+    expect(vesselEval.matchKeywords).toContain('容器');
   });
 });
 

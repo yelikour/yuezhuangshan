@@ -243,6 +243,9 @@ function setupMailWidget(): void {
     widget.classList.remove('has-unread');
     $('mailStatus').innerHTML = `云雁邮 · 已读`;
     link.textContent = '查看收件箱 →';
+    // 同步移除资料库区"云雁邮"的静态红点 badge，与右侧小部件已读状态保持一致
+    const mailNavBadge = document.querySelector('.nav-item[data-name="云雁邮"] .nav-badge');
+    if (mailNavBadge) mailNavBadge.textContent = '';
     link.addEventListener('click', (e) => { e.preventDefault(); enterGame('云雁邮'); });
   } else {
     // 新玩家：1 封未读邀请函，点击进邮箱

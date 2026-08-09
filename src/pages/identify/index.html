@@ -20,8 +20,8 @@
       <button class="btn" id="confirmBtn" disabled>确认这是真正的沈苒</button>
       <button class="btn" id="hintBtn">我卡住了</button>
     </div>
-    <div id="err" class="error-msg"></div>
-    <div id="hintArea"></div>
+    <div id="err" class="error-msg" aria-live="assertive"></div>
+    <div id="hintArea" aria-live="polite" aria-atomic="true"></div>
 
     <div id="afterIdentify" class="readable" hidden style="margin-top:1.5em">
       <div class="chat-msg her" style="margin:1em 0">

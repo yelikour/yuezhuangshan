@@ -23,9 +23,10 @@
     <!-- 主角选项区 -->
     <div id="choicesArea"></div>
 
-    <!-- 对话结束后的状态 -->
+    <!-- 对话结束后的状态（引导文案由 main.ts 从 CHAT.afterDialogHint 注入，见 AGENTS.md 铁律#1） -->
     <div id="dialogEnd" class="readable" hidden style="margin-top:1em; opacity:0.6">
       <p>—— 此后对方离线 ——</p>
+      <p id="afterDialogHint"></p>
     </div>
 
     <!-- 备忘录（含蓄版，替代原"线索整理"） -->

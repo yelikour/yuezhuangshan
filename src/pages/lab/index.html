@@ -30,8 +30,8 @@
         <button class="btn" id="doorBtn">验证</button>
         <button class="btn" id="hintBtn">我卡住了</button>
       </div>
-      <div id="err" class="error-msg"></div>
-      <div id="hintArea"></div>
+      <div id="err" class="error-msg" aria-live="assertive"></div>
+      <div id="hintArea" aria-live="polite" aria-atomic="true"></div>
     </section>
 
     <!-- P09 档案视图 -->
@@ -42,8 +42,8 @@
         <button class="btn" id="archiveBtn">检索</button>
         <button class="btn" id="hintBtn2">我卡住了</button>
       </div>
-      <div id="archiveHintArea"></div>
-      <div id="archiveResults" class="readable" style="margin-top:1em"></div>
+      <div id="archiveHintArea" aria-live="polite" aria-atomic="true"></div>
+      <div id="archiveResults" class="readable" style="margin-top:1em" aria-live="polite"></div>
       <div id="archiveDetail" hidden style="margin-top:1.5em; border:1px solid rgba(255,255,255,0.15); padding:1em; background:rgba(0,0,0,0.3)">
         <button class="btn" id="closeArchiveDetail" style="float:right">关闭</button>
         <div id="archiveDetailBody" class="mail-body readable"></div>

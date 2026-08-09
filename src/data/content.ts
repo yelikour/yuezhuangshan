@@ -23,6 +23,8 @@ export const MAIL = {
 
 您的推理作品对"多视角叙事"与"人格还原"的处理令组委会印象深刻，这正是本届研讨会希望探讨的核心能力。
 
+如需提前了解会议举办地，可参阅"岳桩山生态景区"的官方介绍与地方传说。
+
 —— 组委会`,
   },
   schedule: {
@@ -220,6 +222,9 @@ export const CHAT = {
    * 选某 choice 后跳到 next 节点。terminal 节点无 choices（对话结束）。
    */
   dialogStart: 'n1',
+  /** 对话结束后 #dialogEnd 区的引导文案（剧情化引导玩家去 P04 资讯站，不出现答案性词）。
+   *  由 main.ts 注入，HTML 只保留结构容器（见 AGENTS.md 铁律#1：剧情文案集中 data 层）。 */
+  afterDialogHint: '她说要去走廊尽头看看，然后就没了音讯。这座山以前……是不是也有人这样消失过？本地资讯站或许留有存档。',
   dialog: {
     n1: {
       her: [

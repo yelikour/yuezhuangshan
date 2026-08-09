@@ -32,10 +32,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Type check & tests
-        run: |
-          npm run typecheck
-          npm test
+      - name: Type check
+        run: npm run typecheck
 
       - name: Build
         run: npm run build
@@ -43,6 +41,11 @@ jobs:
           # 部署到 https://yelikour.github.io/yuezhuangshan/
           # 用相对路径 base，让多页面相对链接在子路径下也能正常解析
           NODE_ENV: production
+
+      - name: Tests（含 dist 架构守卫）
+        run: npm test
+        # build 必须先于 test，否则 tests/architecture.test.ts 的构建产物守卫
+        # 会因 dist 不存在而静默跳过，无法拦截剧情文案被内联进 HTML 的构建变更。
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
