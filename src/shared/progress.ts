@@ -14,6 +14,7 @@ export const PUZZLE = {
   LOGIN_P08: 'login_p08',
   SEARCH_P09: 'search_p09',
   IDENTIFY_P11: 'identify_p11',
+  LOGIN_HEZONG: 'login_hezong', // 支线 B+：合奘教执礼人终端
 } as const;
 
 export type PuzzleId = (typeof PUZZLE)[keyof typeof PUZZLE];

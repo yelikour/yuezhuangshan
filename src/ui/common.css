@@ -196,6 +196,33 @@ body.skin-forum {
   background: rgba(0,0,0,0.25);
   flex-shrink: 0;
 }
+/* 文件夹 tab（收件箱 / 垃圾箱） */
+#folderTabs { display: flex; gap: 0.4em; align-items: center; }
+.mail-folder-tab {
+  background: transparent;
+  border: none;
+  color: #8a8a8a;
+  font: inherit;
+  font-size: 0.95em;
+  padding: 0.2em 0.6em;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+.mail-folder-tab:hover { color: #ddd; }
+.mail-folder-tab.active { color: #f0f0f0; border-bottom-color: #ff8a00; }
+.mail-folder-badge {
+  display: inline-block;
+  min-width: 1.2em;
+  margin-left: 0.3em;
+  padding: 0 0.3em;
+  border-radius: 8px;
+  background: #cf1322;
+  color: #fff;
+  font-size: 0.72em;
+  text-align: center;
+  line-height: 1.4;
+  vertical-align: middle;
+}
 .mail-list {
   overflow-y: auto;
   flex: 1;

@@ -48,6 +48,17 @@
       <p><small style="opacity:0.6">（支线：县志残页为可选内容，不影响主线推进。）</small></p>
     </div>
 
+    <!-- 支线 A+：县志数字档案库（检索式 Wiki，随残页一起开放） -->
+    <div id="annalsArchive" class="readable" hidden style="margin-top:1.5em; padding:1em 1.2em; border:1px solid rgba(255,255,255,0.15); border-radius:6px; background:rgba(0,0,0,0.2)">
+      <h2 id="annalsArchiveTitle" style="margin-top:0"></h2>
+      <p id="annalsArchiveIntro" style="opacity:0.6; font-size:0.9em"></p>
+      <div style="display:flex; gap:0.5em; flex-wrap:wrap">
+        <input type="text" id="annalsSearch" class="input" />
+        <button class="btn" id="annalsSearchBtn">检索</button>
+      </div>
+      <div id="annalsResults" style="margin-top:0.8em" aria-live="polite"></div>
+    </div>
+
     <hr style="margin:2em 0; border-color:rgba(255,255,255,0.1)" />
     <p class="readable">返回 <a class="btn" href="../mail/index.html">邮箱</a> 或前往 <a class="btn" href="../chat/index.html">聊天</a>。</p>
   </main>

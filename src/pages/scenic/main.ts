@@ -85,7 +85,41 @@ document.getElementById('annalsLink')!.addEventListener('click', (e) => {
   document.getElementById('annalsBody')!.textContent =
     '【岳桩县志 · 民国抄本残页】"……岳圣桩下有根，根入地极深，与山中草木相连，不可撼动。先人诫：桩不可拔，山不可焚，唯敬老以安之……"\n（注：本页为可选支线，揭示"岳圣桩下有根"——母体与地下生态结合，不可移动。此为世界规则之一，但不影响主线推进。）';
   ap.scrollIntoView({ behavior: 'smooth' });
+  // 支线 A+：随残页开放档案库检索
+  document.getElementById('annalsArchive')!.hidden = false;
 });
+
+// ===== 支线 A+：县志数字档案库（自由检索，无提示谜题）=====
+
+import { ANNALS_DB } from '@data/clues';
+
+document.getElementById('annalsArchiveTitle')!.textContent = SCENIC.annalsArchive.title;
+document.getElementById('annalsArchiveIntro')!.textContent = SCENIC.annalsArchive.intro;
+(document.getElementById('annalsSearch') as HTMLInputElement).placeholder = SCENIC.annalsArchive.placeholder;
+
+function searchAnnals(): void {
+  const q = (document.getElementById('annalsSearch') as HTMLInputElement).value;
+  const out = document.getElementById('annalsResults')!;
+  if (!q.trim()) { out.innerHTML = '<span class="error-msg">请输入检索关键词。</span>'; return; }
+  const hits = ANNALS_DB.filter((e) => matchSearch(q, e.matchKeywords));
+  if (hits.length === 0) {
+    out.innerHTML = `<span class="error-msg">${escapeHtml(SCENIC.annalsArchive.noResult)}</span>`;
+    return;
+  }
+  out.innerHTML = hits.map((h) => `
+    <details style="margin:0.5em 0; padding:0.5em 0.8em; border:1px solid rgba(255,255,255,0.12); border-radius:4px">
+      <summary style="cursor:pointer"><strong>${escapeHtml(h.title)}</strong>
+        <span style="opacity:0.5; font-size:0.8em">〔${escapeHtml(h.book)}〕 ${escapeHtml(h.era)}</span></summary>
+      <div style="margin-top:0.5em; font-size:0.9em; white-space:pre-wrap">${escapeHtml(h.body ?? h.snippet)}</div>
+    </details>`).join('');
+  // 关键词条目命中即授予对应线索
+  for (const h of hits) {
+    if (h.isKey && h.clue) discoverClue(h.clue);
+  }
+}
+
+document.getElementById('annalsSearchBtn')!.addEventListener('click', searchAnnals);
+document.getElementById('annalsSearch')!.addEventListener('keydown', (e) => { if (e.key === 'Enter') searchAnnals(); });
 
 renderHints();
 

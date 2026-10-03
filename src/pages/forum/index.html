@@ -20,6 +20,21 @@
     <ul class="forum-list" id="forumList"></ul>
 
     <div id="forumDetail" hidden></div>
+
+    <!-- 支线 D：存档区（回收站） -->
+    <p style="margin:2em 0 0.5em; font-size:0.8em; opacity:0.45">
+      <a href="#" id="archiveLink" style="color:inherit">存档区</a> ·
+      <span style="text-decoration:line-through">回收站</span> · 违规举报（无人处理）
+    </p>
+
+    <section id="archiveSection" hidden style="margin:1em 0; padding:1em 1.2em; background:rgba(0,0,0,0.06); border:1px dashed #bbb; border-radius:4px">
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:0.5em; flex-wrap:wrap">
+        <h2 style="margin:0; font-size:1.05em" id="archiveTitle"></h2>
+        <button class="btn" id="archiveBack" style="color:#333; border-color:#999; font-size:13px"></button>
+      </div>
+      <p id="archiveIntro" style="opacity:0.55; font-size:0.85em; margin:0.4em 0"></p>
+      <div id="archiveList"></div>
+    </section>
   </main>
   <script type="module" src="./main.ts"></script>
 </body>

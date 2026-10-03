@@ -123,6 +123,18 @@
     </footer>
   </div>
 
+  <!-- 调查手记弹层（线索回顾 + 真相完成度 + 结局图鉴） -->
+  <div class="modal-mask" id="journalMask" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="journalTitle">
+      <div class="modal-head">
+        <h3 id="journalTitle">调查手记</h3>
+        <button class="modal-close" id="closeJournal" aria-label="关闭">✕</button>
+      </div>
+      <div class="modal-body journal-body" id="journalBody"></div>
+      <div class="journal-hint" id="journalHint" hidden aria-hidden="true">▼ 下滑查看更多</div>
+    </div>
+  </div>
+
   <!-- 设置弹层（原启动器的体验设置，藏到这里） -->
   <div class="modal-mask" id="settingsMask" hidden>
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">

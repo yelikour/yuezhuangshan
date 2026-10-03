@@ -9,7 +9,8 @@ import { loadState, hasSave, updateState } from '@shared/storage';
 import { unlock, markVisited } from '@shared/progress';
 import { setVolume, setMuted, setReduceMotion, setSubtitles, applyTheme } from '@ui/theme';
 import { IMG } from '@data/assets';
-import { GAME_CLOCK } from '@data/content';
+import { GAME_CLOCK, ENDING2, JOURNAL_UI } from '@data/content';
+import { truthProgress, truthTierText, journalGroups } from '@shared/truth';
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 
@@ -335,12 +336,20 @@ function setupBookmarks(): void {
         <span class="bookmark-icon">${b.icon}</span> ${b.name}
       </a>`,
     ).join('');
+    // 调查手记：一旦发现过线索或见过结局，随时可查（夹在流程入口后面）
+    if (s.discoveredClues.length > 0 || (s.endingsSeen?.length ?? 0) > 0) {
+      container.insertAdjacentHTML('beforeend',
+        `<a class="bookmark-item bookmark-journal" href="#" id="journalBookmark">
+          <span class="bookmark-icon">📋</span> 调查手记
+        </a>`);
+    }
   }
 
   // 绑定点击 → 进入对应游戏入口
   container.querySelectorAll<HTMLElement>('.bookmark-item').forEach((el) => {
     el.addEventListener('click', (e) => {
       e.preventDefault();
+      if (el.id === 'journalBookmark') { openJournal(); return; }
       const entry = el.dataset.entry!;
       if (entry === '最终抉择') {
         location.href = './src/pages/ending2/index.html';
@@ -351,10 +360,92 @@ function setupBookmarks(): void {
   });
 }
 
+/* ===== 调查手记弹层（真相完成度 + 分组线索 + 结局图鉴）===== */
+
+/** 正文可滚动且未到底时显示"下滑查看更多"，否则隐藏 */
+function updateJournalHint(): void {
+  const body = $('journalBody');
+  const hint = $('journalHint');
+  const scrollable = body.scrollHeight > body.clientHeight + 4;
+  const atBottom = body.scrollTop + body.clientHeight >= body.scrollHeight - 10;
+  hint.hidden = !(scrollable && !atBottom);
+}
+
+function openJournal(): void {
+  renderJournal();
+  $('journalMask').hidden = false;
+  const body = $('journalBody');
+  if (!body.dataset.hintBound) {
+    body.dataset.hintBound = '1';
+    body.addEventListener('scroll', updateJournalHint, { passive: true });
+  }
+  body.scrollTop = 0;
+  updateJournalHint();
+}
+
+function renderJournal(): void {
+  const s = loadState();
+  const t = truthProgress(s);
+  const groups = journalGroups(s);
+  const tierText = truthTierText(t.tier, ENDING2.truth.tiers);
+
+  // 分组线索（未发现的只给计数，不给标题——防剧透但保留挖掘方向）
+  const groupHtml = groups
+    .filter((g) => g.found.length > 0 || g.missing > 0)
+    .map((g) => `
+      <div style="margin:0.5em 0">
+        <div style="font-size:0.85em; opacity:0.65">${escapeHtml(g.group)}
+          ${g.missing > 0 ? `<span style="opacity:0.55">（${g.missing} 条未寻获）</span>` : ''}
+        </div>
+        <ul style="margin:0.2em 0; padding-left:1.1em; font-size:0.92em">
+          ${g.found.map((f) => `<li>${escapeHtml(f)}</li>`).join('')}
+        </ul>
+      </div>`,
+    ).join('');
+
+  // 结局图鉴（三槽位）
+  const names = ENDING2.endingNames;
+  const endingSlots = ENDING2.choices.map((c) => {
+    const seen = (s.endingsSeen ?? []).includes(c.id);
+    return `<span style="margin-right:1.2em; ${seen ? '' : 'opacity:0.6'}">
+      ${seen ? '◈' : '◇'} ${seen ? escapeHtml(names[c.id] ?? c.label) : JOURNAL_UI.endingUnknown}
+    </span>`;
+  }).join('');
+
+  $('journalTitle').textContent = JOURNAL_UI.title;
+  $('journalBody').innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:0.4em">
+      <strong>${escapeHtml(JOURNAL_UI.truthLabel)}</strong>
+      <span style="font-size:1.6em">${t.percent}%<span style="font-size:0.6em; opacity:0.6">（${t.found}/${t.total}）</span></span>
+    </div>
+    <p style="margin:0.3em 0 0.8em; opacity:0.75; font-size:0.92em">${escapeHtml(tierText)}</p>
+    <hr style="border:none; border-top:1px solid rgba(0,0,0,0.1); margin:0.6em 0" />
+    <strong style="font-size:0.95em">${escapeHtml(JOURNAL_UI.clueSectionTitle)}</strong>
+    ${groupHtml || `<p style="opacity:0.6">${escapeHtml(JOURNAL_UI.emptyHint)}</p>`}
+    <hr style="border:none; border-top:1px solid rgba(0,0,0,0.1); margin:0.6em 0" />
+    <strong style="font-size:0.95em">${escapeHtml(JOURNAL_UI.endingsTitle)}</strong>
+    <div style="margin-top:0.35em; font-size:0.92em">${endingSlots}</div>
+    <div class="modal-actions">
+      <button class="btn" id="journalCloseBtn">${escapeHtml(JOURNAL_UI.closeLabel)}</button>
+    </div>`;
+  $('journalCloseBtn').addEventListener('click', () => { $('journalMask').hidden = true; });
+}
+
+function setupJournal(): void {
+  $('closeJournal').addEventListener('click', () => { $('journalMask').hidden = true; });
+  $('journalMask').addEventListener('click', (e) => {
+    if (e.target === $('journalMask')) $('journalMask').hidden = true;
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !$('journalMask').hidden) $('journalMask').hidden = true;
+  });
+}
+
 // 初始化
 renderNav();
 setupSearch();
 setupBookmarks();
+setupJournal();
 setupMailWidget();
 setupDate();
 setupSettings();

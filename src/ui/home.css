@@ -234,7 +234,8 @@ body.skin-home .subtitle { color: var(--yz-text-mute); opacity: 1; }
 .weather-temp { font-size: 38px; font-weight: 200; color: var(--yz-primary); line-height: 1.1; }
 .weather-ext { font-size: 12px; color: var(--yz-text-mute); margin: 3px 0; }
 .weather-tip {
-  font-size: 12px; color: #52c41a; margin-top: 6px;
+  /* 浅底绿字需 ≥4.5:1：#26690c 实测 5.9:1（原 #52c41a 仅 1.97:1） */
+  font-size: 12px; color: #26690c; margin-top: 6px;
   background: rgba(82,196,26,0.10); display: inline-block; padding: 2px 8px; border-radius: 10px;
 }
 .date-day { font-size: 17px; font-weight: 600; color: var(--yz-text); }
@@ -297,6 +298,21 @@ body.skin-home .subtitle { color: var(--yz-text-mute); opacity: 1; }
 }
 .modal-actions { display: flex; align-items: center; gap: 12px; margin-top: 14px; }
 .modal-actions .btn { color: #e8e8ea; }
+
+/* ---- 调查手记弹层：可滚动正文 + 底部滚动提示 ---- */
+.journal-body {
+  max-height: 70vh; overflow-y: auto;
+  padding-right: 28px;   /* 正文与滚动条留距 */
+  padding-bottom: 1.2em; /* 末条不贴边 */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.25) transparent;
+  overscroll-behavior: contain;
+}
+.journal-hint {
+  padding: 8px 20px 14px; text-align: center;
+  font-size: 12px; color: #9aa0a8; /* 5.2:1 */
+  border-top: 1px dashed rgba(255,255,255,0.12);
+}
 
 /* ---- 响应式 ---- */
 @media (max-width: 880px) {

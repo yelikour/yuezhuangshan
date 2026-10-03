@@ -26,7 +26,118 @@ export const CLUE = {
   SHELL_LEFTHAND: 'CLUE_SHELL_LEFTHAND',
   HALF_SHENRAN: 'CLUE_HALF_SHENRAN',
   ONLY_WAY_OUT: 'CLUE_ONLY_WAY_OUT',
+  // 支线 A+：县志档案库
+  FAMINE_PUNISHMENT: 'CLUE_FAMINE_PUNISHMENT',
+  OLD_MEDICAL_RECORD: 'CLUE_OLD_MEDICAL_RECORD',
+  VILLAGE_DECLINE: 'CLUE_VILLAGE_DECLINE',
+  // 支线 B+：合奘教内部区
+  GUILU_ROSTER: 'CLUE_GUILU_ROSTER',
+  RITUAL_LOG: 'CLUE_RITUAL_LOG',
+  LIN_LETTER: 'CLUE_LIN_LETTER',
+  // 支线 D：周衍家属线
+  FORUM_ARCHIVE: 'CLUE_FORUM_ARCHIVE',
+  SEARCH_CENSORSHIP: 'CLUE_SEARCH_CENSORSHIP',
+  ZHOU_FAMILY: 'CLUE_ZHOU_FAMILY',
+  // 支线 E：陆远线（邮箱垃圾箱）
+  LUYUAN_INTERCEPT: 'CLUE_LUYUAN_INTERCEPT',
+  LUYUAN_SILENCED: 'CLUE_LUYUAN_SILENCED',
 } as const;
+
+/** 支线既有线索（非本批次新增，但计入真相完成度） */
+const LEGACY_SIDE_CLUES = ['CLUE_SIDE_ANNALS'] as const;
+
+/**
+ * 真相完成度分母：全部"玩家可发现"线索。
+ * 主线 18 + 县志 3 + 合奘内部 3 + 周衍 3 + 陆远 2 + 既有支线 1 = 30。
+ */
+export const ALL_DISCOVERABLE_CLUES: string[] = [
+  CLUE.INVITE, CLUE.CREDENTIAL_HINT, CLUE.YUESHENGZHUANG_LEGEND, CLUE.THREE_YEAR_TRADITION,
+  CLUE.LAST_NORMAL_MSG, CLUE.ABNORMAL_PHOTO, CLUE.OFFLINE_TIME, CLUE.TAMPERED_REPORT,
+  CLUE.KEYCARD_MAINTENANCE, CLUE.FAKE_RETURN,
+  CLUE.LAB_ACCESS, CLUE.LIN_XUZHI, CLUE.PROTAGONIST_VESSEL, CLUE.SHENRAN_DECOY,
+  CLUE.MOTHER_CANT_LEAVE, CLUE.SHELL_LEFTHAND, CLUE.HALF_SHENRAN, CLUE.ONLY_WAY_OUT,
+  CLUE.FAMINE_PUNISHMENT, CLUE.OLD_MEDICAL_RECORD, CLUE.VILLAGE_DECLINE,
+  CLUE.GUILU_ROSTER, CLUE.RITUAL_LOG, CLUE.LIN_LETTER,
+  CLUE.FORUM_ARCHIVE, CLUE.SEARCH_CENSORSHIP, CLUE.ZHOU_FAMILY,
+  CLUE.LUYUAN_INTERCEPT, CLUE.LUYUAN_SILENCED,
+  ...LEGACY_SIDE_CLUES,
+];
+
+/** 线索的玩家可读标题（用于真相完成度的证据清单展示）。 */
+export const CLUE_TITLES: Record<string, string> = {
+  [CLUE.INVITE]: '定向邀请（邮箱）',
+  [CLUE.CREDENTIAL_HINT]: '口令规则与尾号（入住资料+聊天）',
+  [CLUE.YUESHENGZHUANG_LEGEND]: '岳圣桩传说（景区官网）',
+  [CLUE.THREE_YEAR_TRADITION]: '三年一度传统的日期规律',
+  [CLUE.LAST_NORMAL_MSG]: '沈苒察觉饮用水异常（19:42）',
+  [CLUE.ABNORMAL_PHOTO]: '对称菌斑照片（20:15）',
+  [CLUE.OFFLINE_TIME]: '失联时间锚点（21:03）',
+  [CLUE.TAMPERED_REPORT]: '被篡改的 2019 旧报道',
+  [CLUE.KEYCARD_MAINTENANCE]: '维护通道刷卡记录（23:47 / 02:11）',
+  [CLUE.FAKE_RETURN]: '"我已经回来了"是假的',
+  [CLUE.LAB_ACCESS]: '实验室负责人身份（林叙之 B-07）',
+  [CLUE.LIN_XUZHI]: '林叙之其人',
+  [CLUE.PROTAGONIST_VESSEL]: '你是 S 级"理想容器"',
+  [CLUE.SHENRAN_DECOY]: '沈苒被标注为"诱饵"',
+  [CLUE.MOTHER_CANT_LEAVE]: '主体无法离山（EXP-2024-0173）',
+  [CLUE.SHELL_LEFTHAND]: '02:11 躯壳用左手',
+  [CLUE.HALF_SHENRAN]: '真沈苒仍保留部分意识',
+  [CLUE.ONLY_WAY_OUT]: '唯一出路：让证据离开这座山',
+  [CLUE.FAMINE_PUNISHMENT]: '嘉靖废礼与大旱（县志·灾异）',
+  [CLUE.OLD_MEDICAL_RECORD]: '光绪嗜眠症医案（县志·诊籍）',
+  [CLUE.VILLAGE_DECLINE]: '撤校与外迁：供养崩塌（县志·纪事）',
+  [CLUE.GUILU_ROSTER]: '《归山名录》末页的现代编号',
+  [CLUE.RITUAL_LOG]: '《执礼人手札》：泉变浓了',
+  [CLUE.LIN_LETTER]: '林叙之《复执礼人问》',
+  [CLUE.FORUM_ARCHIVE]: '论坛回收站：被删的寻人帖',
+  [CLUE.SEARCH_CENSORSHIP]: '论坛屏蔽词的存在本身',
+  [CLUE.ZHOU_FAMILY]: '周衍：家属从未被咨询',
+  [CLUE.LUYUAN_INTERCEPT]: '陆远的邮件被"敏感词"隔离',
+  [CLUE.LUYUAN_SILENCED]: '陆远：对门的参会者深夜被带走',
+  CLUE_SIDE_ANNALS: '县志残页：岳圣桩下有根',
+};
+
+/** 线索 → 来源分组（调查手记按组展示；未发现线索只显示组内计数）。 */
+export const CLUE_GROUPS: Record<string, string> = {
+  [CLUE.INVITE]: '云雁邮',
+  [CLUE.CREDENTIAL_HINT]: '云雁邮 · 谛听',
+  [CLUE.YUESHENGZHUANG_LEGEND]: '景区官网',
+  [CLUE.THREE_YEAR_TRADITION]: '景区官网',
+  [CLUE.LAST_NORMAL_MSG]: '谛听 · 聊天',
+  [CLUE.ABNORMAL_PHOTO]: '谛听 · 聊天',
+  [CLUE.OFFLINE_TIME]: '谛听 · 聊天',
+  [CLUE.TAMPERED_REPORT]: '岳桩资讯',
+  [CLUE.KEYCARD_MAINTENANCE]: '研讨会工作台',
+  [CLUE.FAKE_RETURN]: '第一阶段结尾',
+  [CLUE.LAB_ACCESS]: '实验室内网',
+  [CLUE.LIN_XUZHI]: '实验室内网',
+  [CLUE.PROTAGONIST_VESSEL]: '实验室内网',
+  [CLUE.SHENRAN_DECOY]: '实验室内网',
+  [CLUE.MOTHER_CANT_LEAVE]: '实验室内网',
+  [CLUE.SHELL_LEFTHAND]: '实验室内网',
+  [CLUE.HALF_SHENRAN]: '未知号码',
+  [CLUE.ONLY_WAY_OUT]: '未知号码',
+  [CLUE.FAMINE_PUNISHMENT]: '县志档案库',
+  [CLUE.OLD_MEDICAL_RECORD]: '县志档案库',
+  [CLUE.VILLAGE_DECLINE]: '县志档案库',
+  [CLUE.GUILU_ROSTER]: '合奘教 · 内部',
+  [CLUE.RITUAL_LOG]: '合奘教 · 内部',
+  [CLUE.LIN_LETTER]: '合奘教 · 内部',
+  [CLUE.FORUM_ARCHIVE]: '乡邻论坛',
+  [CLUE.SEARCH_CENSORSHIP]: '乡邻论坛',
+  [CLUE.ZHOU_FAMILY]: '云雁邮 · 周衍',
+  [CLUE.LUYUAN_INTERCEPT]: '云雁邮 · 垃圾箱',
+  [CLUE.LUYUAN_SILENCED]: '云雁邮 · 垃圾箱',
+  CLUE_SIDE_ANNALS: '县志档案库',
+};
+
+/** 调查手记分组显示顺序 */
+export const CLUE_GROUP_ORDER = [
+  '云雁邮', '云雁邮 · 谛听', '云雁邮 · 周衍', '云雁邮 · 垃圾箱',
+  '景区官网', '县志档案库', '谛听 · 聊天', '岳桩资讯',
+  '研讨会工作台', '第一阶段结尾', '实验室内网', '未知号码',
+  '乡邻论坛', '合奘教 · 内部',
+] as const;
 
 /**
  * 谜题答案表（标准化后）。
@@ -39,6 +150,8 @@ export const ANSWERS = {
   LOGIN_PASSWORD: normalizeInput('0427ywyxxsc'),
   /** P08 lab 门禁：林叙之(LXZ) + 工位 B-07 */
   LAB_ACCESS_CODE: normalizeInput('lxzb07'),
+  /** 合奘教内部区（执礼人终端）：礼名"归山"拼音 + 上一届归山礼公历年（2027-3=2024） */
+  GUILU_GATE: normalizeInput('guishan2024'),
 } as const;
 
 /** P02 景区官网搜索命中词 */
@@ -241,6 +354,11 @@ export const HINTS: Record<string, string[]> = {
     '真沈苒的判断依据不在剧情高潮里，而在 P03 聊天中她随口提到的、关于家里活物的小习惯。',
     '逐条回看聊天里她和宠物相关的只言片语——某条消息复述了只有你们俩知道的宠物日常，那条才是她。母体不知道这种小事的具体名字。',
   ],
+  login_hezong: [
+    '这个入口只认执礼人——而教义页早已把"下一次仪式"的时间写得明明白白。',
+    '三年一度的礼，教义页写的是"下一届"；口令要的是"最近一届"——两个年份之间，正好差一个周期。',
+    '把"礼"的名字那两个字的拼音，与上一届的公历年份拼在一起，去分隔符、统一小写即可。',
+  ],
 } as const;
 
 /** P09 实验室档案检索库 */
@@ -367,3 +485,176 @@ export const HALF_MESSAGES: HalfMessage[] = [
     isReal: false,
   },
 ];
+
+// ========== 支线 A+：县志数字档案库 ==========
+
+export interface AnnalsEntry {
+  id: string;
+  /** 志书分类：灾异志 / 祥瑞志 / 诊籍 / 纪事 */
+  book: string;
+  title: string;
+  era: string;
+  snippet: string;
+  matchKeywords: string[];
+  isKey?: boolean;
+  /** 命中后授予的线索 id */
+  clue?: string;
+  body?: string;
+}
+
+export const ANNALS_DB: AnnalsEntry[] = [
+  {
+    id: 'jiajing',
+    book: '灾异志',
+    title: '嘉靖十一年废礼与大旱',
+    era: '明 · 嘉靖十一至十三年',
+    snippet: '邑绅议废送老礼……次年大旱，溪赤如血，稼尽枯……',
+    matchKeywords: ['大旱', '旱', '废', '送老', '礼', '灾'],
+    isKey: true,
+    clue: CLUE.FAMINE_PUNISHMENT,
+    body: `【岳桩县志 · 灾异志 · 卷七（点校本）】
+嘉靖十一年冬，邑绅议废送老礼，以为"伤化悖伦"，官府从之。
+十二年，大旱。山溪赤如血，稼尽枯，牲畜多毙，村民大恐。
+十三年正月，乡老率众复行礼于圣桩。是岁，大熟。
+自是六十余年，无人敢复言废。
+
+（点校注：本条"溪赤如血"与民间"山溪变浑"传说对应；"复行礼……是岁大熟"的因果表述，
+在历代修志中被反复抄录，未见官方解释。）`,
+  },
+  {
+    id: 'guangxu',
+    book: '诊籍',
+    title: '光绪二十六年嗜眠之症',
+    era: '清 · 光绪二十六年',
+    snippet: '患者多梦山中人呼己名……迁居平原月余自愈，归则复患。',
+    matchKeywords: ['嗜眠', '失眠', '梦', '溪水', '症', '医'],
+    isKey: true,
+    clue: CLUE.OLD_MEDICAL_RECORD,
+    body: `【岳桩县志 · 诊籍（邑中医家诊籍辑录）】
+光绪二十六年，邑中嗜眠之症流行。患者昼倦夜眠，睡中多梦山中人呼己名，声"轻而温"，醒则怅然若失。饮山溪水者尤甚。
+城中医以安神汤投之，不效。
+有举家迁居平原者，月余自愈；归村未匝月，复患。
+医者不解，记于诊籍，附论曰："此症随水而驻，随人而迁，去山则已，近山则发，非药石所能为力。"
+
+（点校注："去山则已，近山则发"八字典型，可与现代水源检测报告对照阅读。）`,
+  },
+  {
+    id: 'village',
+    book: '纪事',
+    title: '村小撤并与并村外迁',
+    era: '1998 / 2008',
+    snippet: '村小撤并……半数村民外迁……敬老节参与户数逐年递减。',
+    matchKeywords: ['撤并', '学校', '小学', '搬迁', '外迁', '村庄', '变迁'],
+    isKey: true,
+    clue: CLUE.VILLAGE_DECLINE,
+    body: `【岳桩县志 · 纪事（续编 · 二十一世纪卷）】
+1998 年，因生源不足，岳桩村小学撤并，学童转至镇中心校寄宿。
+2008 年，并村搬迁政策实施，半数村民迁入镇安置区。
+纪事栏附记：敬老节（三年一度民俗）参与户数逐年递减，2016 年届仅旧村留守户参与，
+"仪式简办，执礼人言'山不怪罪'"。
+
+（编者按：本县此一民俗之存续，与村落人口结构密切相关。）`,
+  },
+  {
+    id: 'qianlong',
+    book: '风土',
+    title: '乾隆间伐桩异闻',
+    era: '清 · 乾隆年间',
+    snippet: '县令禁"淫祀"，遣衙役伐桩，役夫夜见桩下白骨成行……',
+    matchKeywords: ['伐', '桩', '淫祀', '衙役', '白骨', '风土'],
+    body: `【岳桩县志 · 风土 · 旧闻（节录）】
+乾隆间，县令以"送老礼"近淫祀，欲禁之，遣衙役伐岳圣桩。
+役夫入山，夜宿桩侧。传其归也，惊惧不能言，但云"桩下白骨成行，皆立"。
+县令异之，事遂寝。桩至今存。
+
+（点校注：本条属志怪旧闻类，历代修志者多存而不论。）`,
+  },
+  {
+    id: 'xiangrui',
+    book: '祥瑞志',
+    title: '历届归山年之"嘉禾"',
+    era: '历代',
+    snippet: '凡行礼之岁，秋必报"嘉禾""泉香"……',
+    matchKeywords: ['嘉禾', '祥瑞', '丰收', '泉香', '归山'],
+    body: `【岳桩县志 · 祥瑞志（辑录）】
+凡行送老礼之岁，秋必报"嘉禾"（一茎多穗之稻）与"泉香"。
+志乘相沿，凡三十七见，跨明、清、民国至今。
+修志者按："礼成而岁丰，理不可晓，姑志之。"
+
+（点校注：三十七次"礼成岁丰"的稳定对应关系，用现代语言说，接近一种"服务合同"。）`,
+  },
+];
+
+// ========== 支线 D：论坛回收站与屏蔽词 ==========
+
+export interface DeletedPost {
+  id: string;
+  user: string;
+  title: string;
+  date: string;
+  /** 删除通知（系统显示） */
+  removedNote: string;
+  /** 残留正文 */
+  fragment: string;
+  isKey?: boolean;
+}
+
+export const FORUM_DELETED: DeletedPost[] = [
+  {
+    id: 'd1',
+    user: 'zhouyan2019（周衍）',
+    title: '寻找我哥周行野，2月14日进山未归（我们是外地来的家属）',
+    date: '2019-03-05',
+    removedNote: '该帖已被管理员删除（2019-03-07）· 理由：不实信息',
+    fragment: `我哥周行野，34 岁，2 月 14 日进岳桩山拍照片，至今未归。
+警方搜救三天，只在山下捡到他的背包，人和相机都没找到。
+报上说"自行失足"，可是——
+（以下内容已随删除丢失，仅存缓存残片）
+……如有目击者请联系：zhouyan2019@yunyan.mail。酬谢。`,
+    isKey: true,
+  },
+  {
+    id: 'd2',
+    user: 'zhouyan2019（周衍）',
+    title: '重发：寻找我哥周行野（上一帖为什么被删？）',
+    date: '2019-03-11',
+    removedNote: '该帖已被管理员删除（2019-03-12）· 理由：重复发帖',
+    fragment: `上一帖被删了，没有人给我解释原因。
+我只想问三个问题：
+一、报上写"家属未提异议"——没有人来问过我们，何来异议？
+二、我哥的相机去哪了？背包在，相机不在。
+三、为什么我在这个论坛上，连找个亲人都不行？
+（以下内容已随删除丢失）
+……联系方式同前。我不会放弃的。`,
+    isKey: true,
+  },
+  {
+    id: 'd3',
+    user: '用户已注销',
+    title: '（标题已丢失）',
+    date: '2021-10-02',
+    removedNote: '该帖已被管理员删除（2021-10-03）· 理由：旧事重提',
+    fragment: `（残片）……我爷爷那辈传下来的规矩，本来不是这样的。
+早年的礼，是"山来接人"；后来不知从哪年起，变成"人送人"。
+什么时候变的，老人的说法都对不上……
+（其后内容不可恢复）`,
+  },
+  {
+    id: 'd4',
+    user: '守桩人家的孙女',
+    title: '桩子底下的门，是哪年修的？',
+    date: '2024-02-20',
+    removedNote: '该帖已被管理员删除（2024-02-20）· 理由：涉及内部区域',
+    fragment: `问个事：岳圣桩后面那扇铁门（写着"维护通道"）到底是哪年修的？
+我小时候（零几年）那边明明只有一道木栅栏。
+我们家守桩守了不知多少代，我爸从来不许我问这个。今年送完礼，他一个人坐了一整夜。
+（以下内容已随删除丢失）`,
+  },
+];
+
+/** 论坛搜索屏蔽词：命中即显示"部分结果未予显示"系统条（屏蔽本身即线索）。 */
+export const FORUM_CENSOR_KEYWORDS = ['失踪', '失足', '周行野', '周衍', '送老', '失踪案', '白骨'];
+
+/** 屏蔽系统条的文案（N 条由页面计算注入）。 */
+export const CENSOR_NOTICE = (n: number) =>
+  `根据相关规定，部分结果未予显示（${n} 条）。`;

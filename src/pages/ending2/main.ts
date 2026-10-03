@@ -3,8 +3,9 @@
  */
 import { bootstrap, escapeHtml } from '@shared/bootstrap';
 import { ENDING2 } from '@data/content';
-import { loadState } from '@shared/storage';
+import { loadState, updateState } from '@shared/storage';
 import { playSfx, stopSfx, showFloatingSubtitle } from '@shared/sfx';
+import { truthProgress, truthTierText } from '@shared/truth';
 
 const { denied } = bootstrap({
   pageId: 'ending2', brand: '——', domain: 'localhost', skin: 'ending', node: 'P12',
@@ -40,6 +41,10 @@ choicesEl.querySelectorAll<HTMLElement>('.ending-choice').forEach((el) => {
 
 function showResult(id: string): void {
   const choice = ENDING2.choices.find((c) => c.id === id)!;
+  // 记录已见结局（结局图鉴用）
+  updateState((st) => {
+    if (!st.endingsSeen.includes(id)) st.endingsSeen.push(id);
+  });
   // 淡出选择，淡入结果
   (document.getElementById('choiceView') as HTMLElement).hidden = true;
   const rv = document.getElementById('resultView')!;
@@ -67,6 +72,7 @@ function showResult(id: string): void {
   setTimeout(() => {
     document.getElementById('closingTitle')!.textContent = ENDING2.closingTitle;
     document.getElementById('closingNote')!.textContent = ENDING2.closingNote;
+    renderTruth();
     // "成为容器"结局：渐黑 + 不安
     if (id === 'vessel') {
       document.body.style.transition = 'background 4s';
@@ -75,4 +81,22 @@ function showResult(id: string): void {
   }, totalDelay);
 
   rv.scrollIntoView({ behavior: 'smooth' });
+}
+
+/** 真相完成度 + 证据清单（结局后的二周目驱动） */
+function renderTruth(): void {
+  const holder = document.getElementById('truthPanel')!;
+  holder.hidden = false;
+  const t = truthProgress(loadState());
+  const tierText = truthTierText(t.tier, ENDING2.truth.tiers);
+  const items = t.titles.map((s) => `<li>${escapeHtml(s)}</li>`).join('');
+  holder.innerHTML = `
+    <h3 style="margin:0 0 0.4em">${escapeHtml(ENDING2.truth.label)}　<span style="font-size:1.4em">${t.percent}%</span></h3>
+    <p class="readable" style="margin:0.3em 0">${escapeHtml(tierText)}</p>
+    <details style="margin:0.6em 0">
+      <summary style="cursor:pointer; opacity:0.75">${escapeHtml(ENDING2.truth.evidenceTitle)}（${t.found}/${t.total}）</summary>
+      <p class="readable" style="opacity:0.6; font-size:0.85em; margin:0.4em 0">${escapeHtml(ENDING2.truth.evidenceIntro)}</p>
+      <ul class="readable" style="margin:0.3em 0 0.5em; padding-left:1.2em; font-size:0.9em">${items}</ul>
+      ${t.missing > 0 ? `<p class="readable" style="opacity:0.6; font-size:0.85em">${escapeHtml(ENDING2.truth.missingIntro(t.missing))}</p>` : ''}
+    </details>`;
 }

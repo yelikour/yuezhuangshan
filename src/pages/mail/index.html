@@ -15,7 +15,10 @@
     <div class="mail-layout">
       <!-- 左侧：邮件列表（独立滚动） -->
       <div class="mail-list-pane">
-        <div class="mail-list-header">收件箱</div>
+        <div class="mail-list-header" id="folderTabs" role="tablist" aria-label="邮箱文件夹">
+          <button class="mail-folder-tab active" data-folder="inbox" role="tab" aria-selected="true">收件箱</button>
+          <button class="mail-folder-tab" data-folder="spam" role="tab" aria-selected="false">垃圾箱<span id="spamBadge" class="mail-folder-badge" hidden></span></button>
+        </div>
         <div class="mail-list" id="mailList"></div>
       </div>
       <!-- 右侧：邮件正文（独立滚动） -->

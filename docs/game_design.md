@@ -167,7 +167,7 @@ interface GameState {
 - **减少动态效果**（reduceMotion）：开启后关闭所有 >1px 的位移动画、闪烁、视差、自动滚动；CSS 用 `@media (prefers-reduced-motion)` + JS 运行时开关双重保障。
 - **减少闪烁**：任何闪烁频率 ≤ 3Hz（遵守光敏安全）；reduceMotion 下完全静止。
 - **键盘可达**：所有交互元素可用 Tab + Enter 操作。
-- **对比度**：正文文字与背景对比度 ≥ 4.5:1（即使暗调恐怖氛围，文字区单独提亮）。
+- **对比度**：正文文字与背景对比度 ≥ 4.5:1（即使暗调恐怖氛围，文字区单独提亮）。半透明文字（opacity 叠加）同样按混合后色值核算：手记弹层未解锁结局槽位 opacity 0.6（混合后 5.1:1）；首页天气标签用 #26690c（浅绿底 5.9:1，原 #52c41a 仅 1.97:1，已修）。
 
 ### 5.2 恐怖演出（克制原则）
 
@@ -225,6 +225,66 @@ interface GameState {
 - [x] 自动存档与重新开始
 - [x] 一次克制恐怖演出（P07）
 - [x] 清晰阶段结束页
+
+---
+
+## 六A. 支线与背景扩充（第三批次，借鉴《No Results Found》叙事手法）
+
+> 本批次引入三条支线 + 主线结局增强，全部为**可选内容**，不影响主线 P00–P12 推进。
+
+### 6A.1 支线 A+：县志数字档案库（scenic 页内）
+
+- 县志残页下方新增"档案库检索"（`ANNALS_DB` 词条库，matchSearch 命中展开）。
+- 三个关键词条各挂一条新线索：CLUE_FAMINE_PUNISHMENT / CLUE_OLD_MEDICAL_RECORD / CLUE_VILLAGE_DECLINE。
+- 自由探索，无 attempts/hints；placeholder 只给志书体裁方向，不含任何命中词（测试守卫：placeholder 对 ANNALS_DB 全部 matchKeywords 零命中）。
+
+### 6A.2 支线 B+：合奘教内部区——执礼人终端（hezong 页内）
+
+- 宣传页底部"执礼人入口"（SIDE_HEZONG 解锁后可见）→ 口令谜题 `LOGIN_HEZONG`（答案 `guishan2024`，双线索：教义页"下一届 2027"+ 三年一度 → 上一届 2024；礼名"归山"）。
+- 解开后展示三件教内文献（名录/手札/林叙之复函），挂 CLUE_GUILU_ROSTER / CLUE_RITUAL_LOG / CLUE_LIN_LETTER。
+- 口令框接入 hints 三级体系（PUZZLE.LOGIN_HEZONG）。
+
+### 6A.3 支线 D：周衍家属线（forum + mail 跨站）
+
+- **回收站**：论坛页脚"存档区"链接 → 被删帖列表（`FORUM_DELETED`）。首次阅读 → CLUE_FORUM_ARCHIVE。
+- **搜索屏蔽词**（"无结果即叙事"）：论坛搜索命中 `FORUM_CENSOR_KEYWORDS` 时，结果区顶部显示"根据相关规定，部分结果未予显示（N 条）"系统条 → CLUE_SEARCH_CENSORSHIP。屏蔽不减少实际展示（被删帖本就不在列表），提示条本身就是线索。
+- **周衍回信**：发现 CLUE_FORUM_ARCHIVE 后，邮箱新增《回复：关于 2019 年进山未归的周行野》（邮件可见性条件从 requireNode 扩展为可 requireClue）。→ CLUE_ZHOU_FAMILY。
+
+### 6A.4 真相完成度（TruthProgress，ending2）
+
+- 新模块 `src/shared/truth.ts`：`truthProgress(state)` 返回 `{ found, total, ratio, tier }`。
+- 分母 = `ALL_DISCOVERABLE_CLUES`（主线 18 条 + 支线 8 条 + 陆远线 2 条 = 28 + 2 = 30）。
+- ending2 完成页展示"真相还原度 X%" + 分级文案 + 证据清单（已收集线索标题列表、未收集计数）。
+- 证据清单只显示线索**标题**，不重复正文（正文在来源页）。
+
+### 6A.5 调查手记与结局图鉴（首页收藏栏，第四批次）
+
+- **调查手记**：首页收藏栏新增"📋 调查手记"入口（发现 ≥1 条线索后出现），弹层展示：
+  - 真相还原度 X% + 分档文案（复用 truth.ts）；
+  - 线索按来源分组（`CLUE_GROUPS`：邮箱 / 聊天 / 景区·县志 / 论坛 / 合奘教 / 实验室内网 / 结局·其他）；
+  - 未收集线索不显示标题，仅按分组给出"待发现"计数（防剧透 + 暗示挖掘方向）。
+- **结局图鉴**：`GameState.endingsSeen: string[]`（存档 v1 向后兼容，mergeState 补默认空数组）。
+  - ending2 选定结局时写入选项 id（submit / burn / vessel）。
+  - 手记弹层展示三个结局槽位：已见显示名称，未见显示"？？（尚未抵达）"。
+- **空收件箱引导修复**：邮箱在 P01 未激活且无可见邮件时，列表区显示"邮箱尚未开通——请从导航首页开始"（修复直接输 URL 进入时白屏式空列表）。
+
+### 6A.6 垃圾箱与陆远线（支线 E，第四批次）
+
+- 邮箱新增**垃圾箱**文件夹（收件箱/垃圾箱两个 tab，垃圾箱 tab 带未读计数）。
+- 原"推广"邮件移入垃圾箱；新增 2 封干扰邮件（刷单/游戏广告）。
+- **陆远线**（呼应《归山名录》"P-03 陆远（备）"）：
+  - `luYanSpam1`（06-20 22:47，requireNode P04）：晚宴茶水有问题的警告，被山庄邮件网关以"敏感词"隔离 → CLUE_LUYUAN_INTERCEPT。
+  - `luYanSpam2`（06-20 23:58，requireNode P06）：目击对门参会者深夜被"搀扶"带走；"如果我明天没出现在闭幕式" → CLUE_LUYUAN_SILENCED。
+- **论坛叙事化指引**：CHAT.historyMessages 新增一条 06-19 消息（沈苒行前提到"乡邻论坛"），为支线 D 提供有机入口。
+
+### 6A.7 新增音效落点（第四批次）
+
+| 音效 | 落点 | 触发 |
+|------|------|------|
+| water_drip | 论坛存档区 | 首次打开存档区 |
+| glitch_click | 论坛屏蔽系统条 | 系统条出现时 |
+| glitch_click | 合奘教执礼人终端 | 口令通过时 |
+| glitch_click | 邮箱垃圾箱 tab | 首次切换到垃圾箱 |
 
 ---
 
