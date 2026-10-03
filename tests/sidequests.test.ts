@@ -12,7 +12,7 @@ import {
   ANSWERS, ANNALS_DB, FORUM_DELETED, FORUM_CENSOR_KEYWORDS,
   ALL_DISCOVERABLE_CLUES, CLUE_TITLES, CLUE_GROUPS, CLUE_GROUP_ORDER, CLUE,
 } from '@data/clues';
-import { SCENIC, HEZONG, MAIL, FORUM_POSTS, ENDING2, CHAT, JOURNAL_UI } from '@data/content';
+import { SCENIC, HEZONG, MAIL, FORUM_POSTS, ENDING2, CHAT, JOURNAL_UI, GAME_CLOCK } from '@data/content';
 import { truthProgress, truthTierText, journalGroups } from '@shared/truth';
 import { _resetCacheForTests } from '@shared/storage';
 
@@ -231,6 +231,28 @@ describe('调查手记与结局图鉴', () => {
     usedGroups.forEach((g) => {
       expect((CLUE_GROUP_ORDER as readonly string[]).includes(g!), `分组 ${g} 不在显示顺序表`).toBe(true);
     });
+  });
+  it('journalGroups 输出顺序严格等于 CLUE_GROUP_ORDER（docs §6A.4）', () => {
+    const groups = journalGroups({ discoveredClues: [] });
+    const order = groups.map((g) => g.group);
+    const expected = (CLUE_GROUP_ORDER as readonly string[]).filter((g) => order.includes(g));
+    expect(order).toEqual(expected);
+  });
+});
+
+describe('第五批次：文案集中与拟真细节', () => {
+  it('县志残页正文集中在 content.ts（铁律#1），不再硬编码于页面脚本', () => {
+    expect(SCENIC.annalsFragment).toContain('岳圣桩下有根');
+    expect(SCENIC.annalsFragment).toContain('不可移动');
+  });
+  it('首页农历与真实万年历一致：2026-06-21 = 丙午年五月初七', () => {
+    expect(GAME_CLOCK.dateDay).toContain('6月21日');
+    expect(GAME_CLOCK.dateLunar).toContain('五月初七');
+    expect(GAME_CLOCK.dateLunar).not.toContain('六月');
+  });
+  it('ending2"回到选择"文案齐备（结局图鉴配套）', () => {
+    expect(ENDING2.rechooseLabel).toBeTruthy();
+    expect(ENDING2.rechooseHint).toBeTruthy();
   });
 });
 

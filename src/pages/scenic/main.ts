@@ -4,7 +4,7 @@
 import { bootstrap, escapeHtml } from '@shared/bootstrap';
 import { discoverClue, unlock, PUZZLE } from '@shared/progress';
 import { matchSearch } from '@shared/normalize';
-import { SEARCH_P02_KEYWORDS } from '@data/clues';
+import { SEARCH_P02_KEYWORDS, ANNALS_DB, CLUE } from '@data/clues';
 import { SCENIC } from '@data/content';
 import { requestHint, visibleHints } from '@shared/hints';
 import { HINTS } from '@data/clues';
@@ -69,8 +69,7 @@ function renderHints(): void {
     .join('')}</ul></div>`;
 }
 
-// 支线：县志残页
-import { CLUE } from '@data/clues';
+// 支线：县志残页（正文文案集中在 content.ts 的 SCENIC.annalsFragment）
 document.getElementById('annalsLink')!.addEventListener('click', (e) => {
   e.preventDefault();
   // 先要展示传说页才能点进来
@@ -82,16 +81,13 @@ document.getElementById('annalsLink')!.addEventListener('click', (e) => {
   discoverClue('CLUE_SIDE_ANNALS');
   const ap = document.getElementById('annalsPage')!;
   ap.hidden = false;
-  document.getElementById('annalsBody')!.textContent =
-    '【岳桩县志 · 民国抄本残页】"……岳圣桩下有根，根入地极深，与山中草木相连，不可撼动。先人诫：桩不可拔，山不可焚，唯敬老以安之……"\n（注：本页为可选支线，揭示"岳圣桩下有根"——母体与地下生态结合，不可移动。此为世界规则之一，但不影响主线推进。）';
+  document.getElementById('annalsBody')!.textContent = SCENIC.annalsFragment;
   ap.scrollIntoView({ behavior: 'smooth' });
   // 支线 A+：随残页开放档案库检索
   document.getElementById('annalsArchive')!.hidden = false;
 });
 
 // ===== 支线 A+：县志数字档案库（自由检索，无提示谜题）=====
-
-import { ANNALS_DB } from '@data/clues';
 
 document.getElementById('annalsArchiveTitle')!.textContent = SCENIC.annalsArchive.title;
 document.getElementById('annalsArchiveIntro')!.textContent = SCENIC.annalsArchive.intro;

@@ -7,6 +7,7 @@ import { checkPassword, matchSearch } from '@shared/normalize';
 import { ANSWERS, ARCHIVE_DB, HINTS, CLUE } from '@data/clues';
 import { LAB } from '@data/content';
 import { IMG } from '@data/assets';
+import { loadState } from '@shared/storage';
 import { requestHint, visibleHints } from '@shared/hints';
 
 // P08 门禁：节点 P08 在通过后才进入，但首次访问 lab 时 P08 默认要求门禁通过
@@ -95,6 +96,17 @@ function searchArchive(): void {
   });
 }
 
+/** 渲染 P09 读完评估报告后的推进文案（刷新恢复时同样调用） */
+function renderAfterArchive(): void {
+  // 主体局限日志（母体无法离山）还没读过时，轻提示玩家回头补看（防漏，不剧透正文）
+  const readLimit = loadState().discoveredClues.includes(CLUE.MOTHER_CANT_LEAVE);
+  document.getElementById('afterArchiveBody')!.innerHTML =
+    LAB.afterArchiveIntro.map((p) => `<p>${escapeHtml(p)}</p>`).join('') +
+    (readLimit ? '' : `<p style="opacity:0.65; margin-top:1em">${escapeHtml(LAB.afterArchiveExtra)}</p>`);
+  document.getElementById('goMonitor')!.textContent = LAB.afterArchiveBtn;
+  (document.getElementById('afterArchive') as HTMLElement).hidden = false;
+}
+
 function showArchive(id: string): void {
   const d = ARCHIVE_DB.find((x) => x.id === id)!;
   const detail = document.getElementById('archiveDetail')!;
@@ -112,7 +124,7 @@ function showArchive(id: string): void {
     discoverClue(CLUE.SHENRAN_DECOY);
     markSolved(PUZZLE.SEARCH_P09);
     unlock('P10');
-    (document.getElementById('afterArchive') as HTMLElement).hidden = false;
+    renderAfterArchive();
   }
   detail.scrollIntoView({ behavior: 'smooth' });
 }
@@ -157,7 +169,7 @@ function restoreSavedView(): void {
   // P10 的逻辑解锁依赖 P09 节点，但只有查阅关键档案后才应显示监控标签。
   if (isSolved(PUZZLE.SEARCH_P09)) {
     labTabs.hidden = false;
-    (document.getElementById('afterArchive') as HTMLElement).hidden = false;
+    renderAfterArchive();
   }
 
   // 已经看过监控时恢复监控画面和“查看消息”入口。

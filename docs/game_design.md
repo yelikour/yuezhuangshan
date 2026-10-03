@@ -99,7 +99,7 @@ interface GameState {
 ### 2.2 自动存档与重新开始
 
 - 每次状态变更后自动写 localStorage。
-- "重新开始"清空 key 并重载到 P00。
+- "重新开始"必须调用 `resetState()`（生成全新默认态并写盘）。**禁止**只 `localStorage.removeItem` + `updateState`——storage 层有内存缓存，removeItem 后任何一次 loadState/saveState 都会把旧档从缓存写回，导致"重新开始"失效（2026-10 实机复现并修复，tests/progress.test.ts 有回归测试）。
 - 提供"导出存档/导入存档"（JSON 文本），便于调试与未来多设备。
 
 ---
@@ -234,7 +234,7 @@ interface GameState {
 
 ### 6A.1 支线 A+：县志数字档案库（scenic 页内）
 
-- 县志残页下方新增"档案库检索"（`ANNALS_DB` 词条库，matchSearch 命中展开）。
+- 县志残页（正文文案 = `SCENIC.annalsFragment`，集中于 content.ts）下方新增"档案库检索"（`ANNALS_DB` 词条库，matchSearch 命中展开）。
 - 三个关键词条各挂一条新线索：CLUE_FAMINE_PUNISHMENT / CLUE_OLD_MEDICAL_RECORD / CLUE_VILLAGE_DECLINE。
 - 自由探索，无 attempts/hints；placeholder 只给志书体裁方向，不含任何命中词（测试守卫：placeholder 对 ANNALS_DB 全部 matchKeywords 零命中）。
 
@@ -256,6 +256,7 @@ interface GameState {
 - 分母 = `ALL_DISCOVERABLE_CLUES`（主线 18 条 + 支线 8 条 + 陆远线 2 条 = 28 + 2 = 30）。
 - ending2 完成页展示"真相还原度 X%" + 分级文案 + 证据清单（已收集线索标题列表、未收集计数）。
 - 证据清单只显示线索**标题**，不重复正文（正文在来源页）。
+- `journalGroups(state)` 的分组输出顺序严格按 `CLUE_GROUP_ORDER` 排序（clues.ts），用于调查手记弹层；未列出的组名排在最后。
 
 ### 6A.5 调查手记与结局图鉴（首页收藏栏，第四批次）
 
@@ -266,6 +267,7 @@ interface GameState {
 - **结局图鉴**：`GameState.endingsSeen: string[]`（存档 v1 向后兼容，mergeState 补默认空数组）。
   - ending2 选定结局时写入选项 id（submit / burn / vessel）。
   - 手记弹层展示三个结局槽位：已见显示名称，未见显示"？？（尚未抵达）"。
+  - **回到选择**（第五批次）：结局结果页提供"回到选择"按钮，返回三选项界面重选其余结局；`endingsSeen` 只增不减，选择页已见结局带 ◈ 标记。集齐三结局不再需要清档重玩。
 - **空收件箱引导修复**：邮箱在 P01 未激活且无可见邮件时，列表区显示"邮箱尚未开通——请从导航首页开始"（修复直接输 URL 进入时白屏式空列表）。
 
 ### 6A.6 垃圾箱与陆远线（支线 E，第四批次）

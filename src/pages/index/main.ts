@@ -5,7 +5,7 @@
  * 游戏的真正入口伪装成：邮箱小部件的"未读邮件"、旅游分类里的"岳桩山生态景区"链接。
  * 体验设置（音量/减少动态/内容提醒）藏进右上角"设置"弹层，不打断沉浸感。
  */
-import { loadState, hasSave, updateState } from '@shared/storage';
+import { loadState, hasSave, resetState } from '@shared/storage';
 import { unlock, markVisited } from '@shared/progress';
 import { setVolume, setMuted, setReduceMotion, setSubtitles, applyTheme } from '@ui/theme';
 import { IMG } from '@data/assets';
@@ -287,8 +287,9 @@ function setupSettings(): void {
 
   $('restartBtn').addEventListener('click', () => {
     if (!confirm('确定清除当前存档并重新开始？所有进度将丢失。')) return;
-    localStorage.removeItem('yueZhuangShan_save_v1');
-    updateState(() => {});
+    // 必须 resetState：storage 层有内存缓存，直接 removeItem 会被下一次
+    // loadState/saveState 从缓存写回，导致"重新开始"静默失效。
+    resetState();
     renderSettings();
     setupMailWidget();
     $('saveStatus').textContent = '已清除存档。';

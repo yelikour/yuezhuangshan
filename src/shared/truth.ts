@@ -4,7 +4,7 @@
  * 分母 = data/clues.ts 的 ALL_DISCOVERABLE_CLUES（主线 + 全部支线线索）。
  * 用于 ending2 完成页的"真相还原度 X%"与证据清单展示，驱动二周目挖掘。
  */
-import { ALL_DISCOVERABLE_CLUES, CLUE_TITLES, CLUE_GROUPS } from '@data/clues';
+import { ALL_DISCOVERABLE_CLUES, CLUE_TITLES, CLUE_GROUPS, CLUE_GROUP_ORDER } from '@data/clues';
 import type { GameState } from './state';
 
 export interface TruthProgress {
@@ -65,6 +65,13 @@ export function journalGroups(state: Pick<GameState, 'discoveredClues'>): Journa
     else entry.missing += 1;
     byGroup.set(g, entry);
   }
+  // 显示顺序严格按 CLUE_GROUP_ORDER（docs/game_design.md §6A.4）；
+  // 数据里新出现的组名排在最后，避免排序表与数据漂移时悄悄换位。
+  const orderIndex = (g: string) => {
+    const i = (CLUE_GROUP_ORDER as readonly string[]).indexOf(g);
+    return i === -1 ? CLUE_GROUP_ORDER.length : i;
+  };
   return Array.from(byGroup.entries())
-    .map(([group, { found, missing }]) => ({ group, found, missing }));
+    .map(([group, { found, missing }]) => ({ group, found, missing }))
+    .sort((a, b) => orderIndex(a.group) - orderIndex(b.group));
 }

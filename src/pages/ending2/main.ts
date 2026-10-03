@@ -21,23 +21,28 @@ document.getElementById('title')!.textContent = ENDING2.title;
 playSfx('ambientDrone', { loop: true, volumeScale: 0.5, onSubtitle: (t) => showFloatingSubtitle(t) });
 window.addEventListener('pagehide', () => stopSfx('ambientDrone'));
 
-// 渲染三选项
 const choicesEl = document.getElementById('choices')!;
-choicesEl.innerHTML = ENDING2.choices.map((c, i) =>
-  `<div class="ending-choice" data-id="${c.id}" tabindex="0" role="button">
-    <div class="ending-choice-num">${['壹', '贰', '叁'][i]}</div>
-    <div class="ending-choice-body">
-      <div class="ending-choice-label">${escapeHtml(c.label)}</div>
-      <div class="ending-choice-desc">${escapeHtml(c.desc)}</div>
-    </div>
-  </div>`,
-).join('');
 
-choicesEl.querySelectorAll<HTMLElement>('.ending-choice').forEach((el) => {
-  const choose = () => showResult(el.dataset.id!);
-  el.addEventListener('click', choose);
-  el.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); choose(); } });
-});
+// 渲染三选项（已见结局标 ◈，配合"回到选择"反复收集）
+function renderChoices(): void {
+  const seen = loadState().endingsSeen ?? [];
+  choicesEl.innerHTML = ENDING2.choices.map((c, i) =>
+    `<div class="ending-choice" data-id="${c.id}" tabindex="0" role="button">
+      <div class="ending-choice-num">${['壹', '贰', '叁'][i]}${seen.includes(c.id) ? ' ◈' : ''}</div>
+      <div class="ending-choice-body">
+        <div class="ending-choice-label">${escapeHtml(c.label)}</div>
+        <div class="ending-choice-desc">${escapeHtml(c.desc)}</div>
+      </div>
+    </div>`,
+  ).join('');
+
+  choicesEl.querySelectorAll<HTMLElement>('.ending-choice').forEach((el) => {
+    const choose = () => showResult(el.dataset.id!);
+    el.addEventListener('click', choose);
+    el.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); choose(); } });
+  });
+}
+renderChoices();
 
 function showResult(id: string): void {
   const choice = ENDING2.choices.find((c) => c.id === id)!;
@@ -78,6 +83,29 @@ function showResult(id: string): void {
       document.body.style.transition = 'background 4s';
       document.body.style.background = '#000';
     }
+    // 回到选择：结局已计数，允许重选其余结局集齐图鉴（docs §6A.5）
+    const actions = document.getElementById('closingActions')!;
+    actions.hidden = false;
+    actions.innerHTML = '';
+    const backBtn = document.createElement('button');
+    backBtn.className = 'btn';
+    backBtn.textContent = ENDING2.rechooseLabel;
+    backBtn.addEventListener('click', () => {
+      // 还原 vessel 结局的渐黑背景，回到三选项界面
+      document.body.style.transition = '';
+      document.body.style.background = '';
+      rv.hidden = true;
+      (document.getElementById('truthPanel') as HTMLElement).hidden = true;
+      actions.hidden = true;
+      (document.getElementById('choiceView') as HTMLElement).hidden = false;
+      renderChoices();
+      window.scrollTo({ top: 0 });
+    });
+    actions.appendChild(backBtn);
+    const hint = document.createElement('span');
+    hint.style.cssText = 'margin-left:0.8em; opacity:0.55; font-size:0.85em';
+    hint.textContent = ENDING2.rechooseHint;
+    actions.appendChild(hint);
   }, totalDelay);
 
   rv.scrollIntoView({ behavior: 'smooth' });

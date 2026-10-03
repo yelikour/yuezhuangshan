@@ -125,3 +125,28 @@ describe('邮件已读状态持久化', () => {
     expect(s.unlockedNodes).toEqual(['P00']); // 其它字段不受影响
   });
 });
+
+describe('重新开始（回归：2026-10 实机发现的清档失效 bug）', () => {
+  it('旧写法 removeItem + updateState 会从内存缓存复活存档（bug 复现，警示用例）', () => {
+    unlock('P02');
+    expect(loadState().unlockedNodes).toContain('P02');
+    // 旧实现路径：只删 localStorage 不清内存缓存
+    localStorage.removeItem('yueZhuangShan_save_v1');
+    updateState(() => {}); // 任意一次状态变更都会把缓存写回
+    expect(localStorage.getItem('yueZhuangShan_save_v1')).not.toBeNull();
+  });
+
+  it('resetState 真正清档：内存缓存与 localStorage 同步归零', () => {
+    unlock('P02');
+    discoverClue('CLUE_INVITE');
+    resetState();
+    // 不清缓存直接读（模拟"重新开始"后不刷新继续操作）
+    expect(loadState().unlockedNodes).toEqual(['P00']);
+    expect(loadState().discoveredClues).toEqual([]);
+    // 清缓存再读（模拟刷新页面）
+    _resetCacheForTests();
+    expect(loadState().unlockedNodes).toEqual(['P00']);
+    expect(loadState().discoveredClues).toEqual([]);
+    expect(isUnlocked('P02')).toBe(false);
+  });
+});
