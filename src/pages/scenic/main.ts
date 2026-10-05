@@ -100,7 +100,10 @@ function searchAnnals(): void {
   if (!q.trim()) { out.innerHTML = '<span class="error-msg">请输入检索关键词。</span>'; return; }
   const hits = ANNALS_DB.filter((e) => matchSearch(q, e.matchKeywords));
   if (hits.length === 0) {
-    out.innerHTML = `<span class="error-msg">${escapeHtml(SCENIC.annalsArchive.noResult)}</span>`;
+    // 彩蛋：无正常词条命中、且命中彩蛋词（芝麻/猫）时，附库房管护留言（docs/clue_graph.md §五C）
+    const egg = matchSearch(q, SCENIC.annalsArchive.catEasterEggKeywords);
+    out.innerHTML = `<span class="error-msg">${escapeHtml(SCENIC.annalsArchive.noResult)}</span>` +
+      (egg ? `<div style="margin-top:0.5em; opacity:0.6; font-style:italic">${escapeHtml(SCENIC.annalsArchive.catEasterEgg)}</div>` : '');
     return;
   }
   out.innerHTML = hits.map((h) => `
