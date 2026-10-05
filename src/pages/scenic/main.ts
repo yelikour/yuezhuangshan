@@ -1,3 +1,4 @@
+import { scrollToContent } from '@shared/motion';
 /**
  * P02 景区官网：宣传、岳圣桩传说（搜索谜题）、支线县志。
  */
@@ -82,7 +83,7 @@ document.getElementById('annalsLink')!.addEventListener('click', (e) => {
   const ap = document.getElementById('annalsPage')!;
   ap.hidden = false;
   document.getElementById('annalsBody')!.textContent = SCENIC.annalsFragment;
-  ap.scrollIntoView({ behavior: 'smooth' });
+  scrollToContent(ap);
   // 支线 A+：随残页开放档案库检索
   document.getElementById('annalsArchive')!.hidden = false;
 });

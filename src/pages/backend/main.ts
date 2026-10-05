@@ -26,6 +26,7 @@ root.hidden = false;
 document.getElementById('welcome')!.textContent = BACKEND.welcome;
 document.getElementById('loginHint')!.textContent = BACKEND.loginHint;
 document.getElementById('recordsTitle')!.textContent = BACKEND.recordsTitle;
+document.getElementById('monitorTitle')!.textContent = BACKEND.monitorTitle;
 
 const accountEl = document.getElementById('account') as HTMLInputElement;
 const pwdEl = document.getElementById('password') as HTMLInputElement;

@@ -1,3 +1,4 @@
+import { scrollToContent } from '@shared/motion';
 /**
  * P11 半沈苒：真假消息分辨。玩家选出真正的沈苒（基于私密记忆"芝麻"猫）。
  */
@@ -64,7 +65,7 @@ function confirm(): void {
   document.querySelectorAll('.identify-choice').forEach((el) => {
     el.classList.toggle('chosen', (el as HTMLElement).dataset.id === selectedId);
   });
-  document.getElementById('afterIdentify')!.scrollIntoView({ behavior: 'smooth' });
+  scrollToContent(document.getElementById('afterIdentify')!);
 }
 
 document.getElementById('confirmBtn')!.addEventListener('click', confirm);

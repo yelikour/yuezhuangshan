@@ -26,7 +26,7 @@
       </div>
       <p class="readable" id="doorPrompt"></p>
       <div style="display:flex; gap:0.5em; align-items:center">
-        <input type="text" id="doorCode" class="input" placeholder="身份码" autocomplete="off" />
+        <input type="text" id="doorCode" class="input" aria-label="身份码" placeholder="身份码" autocomplete="off" />
         <button class="btn" id="doorBtn">验证</button>
         <button class="btn" id="hintBtn">我卡住了</button>
       </div>
@@ -49,7 +49,7 @@
         <div id="archiveDetailBody" class="mail-body readable"></div>
       </div>
       <div id="afterArchive" class="readable" hidden style="margin-top:1.5em">
-        <p id="afterArchiveBody"></p>
+        <div id="afterArchiveBody"></div>
         <p><button class="btn" id="goMonitor">查看监控回放</button></p>
       </div>
     </section>
@@ -69,11 +69,9 @@
       </div>
       <p class="readable" id="monitorNote" style="margin-top:1em"></p>
       <div id="afterMonitor" class="readable" hidden style="margin-top:1.5em">
-        <h2>那不是她</h2>
-        <p>画面里的人用<strong>左手</strong>按下了闸机。</p>
-        <p>但沈苒是右撇子——她在聊天里说过，"我用右手写字总蹭脏袖口"。</p>
-        <p>走进去的是她的身体，但不是她。是它，穿着她。</p>
-        <p class="will-flicker">你的手机又震了。一个未知号码。</p>
+        <h2 id="afterMonitorTitle"></h2>
+        <div id="afterMonitorBody"></div>
+        <p class="will-flicker" id="afterMonitorAlert"></p>
         <p style="margin-top:1em"><a class="btn" id="goChat2" href="../identify/index.html">查看消息</a></p>
       </div>
     </section>

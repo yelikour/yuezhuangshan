@@ -6,13 +6,24 @@ import {
   tryUnlock, unlock, discoverClue, markSolved, PUZZLE,
 } from '@shared/progress';
 import { checkPassword } from '@shared/normalize';
-import { ANSWERS, ARCHIVE_DB, HALF_MESSAGES, CLUE } from '@data/clues';
+import { ANSWERS, ARCHIVE_DB, HALF_MESSAGES, CLUE, KEYCARD_LOGS } from '@data/clues';
+import { BACKEND, ENDING, FORUM_POSTS } from '@data/content';
 
 beforeEach(() => {
   localStorage.clear();
 });
 
 describe('第二阶段节点解锁链', () => {
+  it('假消息到达晚于调查开始，论坛转述与周案同年同期', () => {
+    expect(ENDING.fakeMessage.time > '2026-06-21 08:00').toBe(true);
+    expect(ENDING.fakeMessage.time < '2026-06-21 09:30').toBe(true);
+    expect(ENDING.fakeMessage.sender).toContain('2026-06-20 21:30');
+    expect(BACKEND.monitorTitle).toContain('内层 · 02:11');
+    expect(KEYCARD_LOGS.find((item) => item.time.endsWith('19:42'))!.note).not.toContain('最后');
+    const post = FORUM_POSTS.find((item) => item.id === 'f2')!;
+    expect(post.date).toBe('2019-03-11');
+    expect(post.title).not.toContain('十年前');
+  });
   it('P08 依赖 P07', () => {
     expect(tryUnlock('P08')).toBe(false);
     unlock('P07');
@@ -26,8 +37,10 @@ describe('第二阶段节点解锁链', () => {
     expect(tryUnlock('P09')).toBe(true);
   });
 
-  it('P10 依赖 P09', () => {
+  it('P10 依赖 P09 与已读关键评估档案，不能从门禁直接跳到监控', () => {
     unlock('P07'); unlock('P08'); markSolved(PUZZLE.LOGIN_P08); unlock('P09');
+    expect(tryUnlock('P10')).toBe(false);
+    markSolved(PUZZLE.SEARCH_P09);
     expect(tryUnlock('P10')).toBe(true);
   });
 

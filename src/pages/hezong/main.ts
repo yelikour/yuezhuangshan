@@ -1,3 +1,4 @@
+import { scrollToContent } from '@shared/motion';
 /**
  * 合奘教宣传页（SIDE_HEZONG）：温和诗意的宗教官网，细读脊背发凉。
  * 支线 B+：底部"执礼人入口"→ 口令谜题 → 三件教内文献（名录/手札/林叙之复函）。
@@ -34,7 +35,7 @@ function showSection(id: string): void {
   const s = HEZONG.sections.find((x) => x.id === id)!;
   body.innerHTML = `<h2>${escapeHtml(s.title)}</h2><div class="mail-body">${escapeHtml(s.body)}</div>`;
   nav.querySelectorAll('.hezong-nav-btn').forEach((b) => b.classList.toggle('active', (b as HTMLElement).dataset.id === id));
-  body.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  scrollToContent(body, 'start');
 }
 
 nav.querySelectorAll('.hezong-nav-btn').forEach((b) => {
@@ -99,7 +100,7 @@ function tryGate(): void {
   renderDocs();
   // 古册开启：短促电流杂音（老终端联机感）
   playSfxWithSubtitle('glitchClick', { volumeScale: 0.5 });
-  docs.scrollIntoView({ behavior: 'smooth' });
+  scrollToContent(docs);
 }
 
 document.getElementById('innerGateBtn')!.addEventListener('click', tryGate);

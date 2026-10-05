@@ -1,3 +1,4 @@
+import { scrollToContent } from '@shared/motion';
 /**
  * P04 地方资讯搜索：关键词搜索谜题 → 被篡改的旧报道（时间线矛盾#1）。
  * 解出后解锁 CLUE_TAMPERED_REPORT，开放 P05 后台登录。
@@ -74,7 +75,7 @@ function showDetail(id: string): void {
     markSolved(PUZZLE.SEARCH_P04);
     unlock('P05');
     (document.getElementById('afterSolve') as HTMLElement).hidden = false;
-    detail.scrollIntoView({ behavior: 'smooth' });
+    scrollToContent(detail);
   }
 }
 

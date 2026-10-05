@@ -35,7 +35,7 @@ export const DEPENDENCIES: Partial<Record<NodeId, string[]>> = {
   // 第二阶段
   P08: ['NODE:P07'], // 看过第一阶段结尾后进入维护通道
   P09: ['NODE:P08', 'PUZZLE:login_p08'], // 通过 lab 门禁
-  P10: ['NODE:P09'], // 看过档案
+  P10: ['NODE:P09', 'PUZZLE:search_p09'], // 看过关键评估档案
   P11: ['CLUE:CLUE_SHELL_LEFTHAND'], // 发现躯壳破绽
   P12: ['PUZZLE:identify_p11'], // 分辨出真沈苒
   SIDE_ANNALS: ['NODE:P02'],

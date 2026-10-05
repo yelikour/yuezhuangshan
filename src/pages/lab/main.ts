@@ -9,6 +9,7 @@ import { LAB } from '@data/content';
 import { IMG } from '@data/assets';
 import { loadState } from '@shared/storage';
 import { requestHint, visibleHints } from '@shared/hints';
+import { scrollToContent } from '@shared/motion';
 
 // P08 门禁：节点 P08 在通过后才进入，但首次访问 lab 时 P08 默认要求门禁通过
 const { denied } = bootstrap({
@@ -51,7 +52,7 @@ function tryDoor(): void {
   // 切到档案视图
   doorView.hidden = true;
   archiveView.hidden = false;
-  labTabs.hidden = false;
+  labTabs.hidden = true;
 }
 
 document.getElementById('doorBtn')!.addEventListener('click', tryDoor);
@@ -118,15 +119,17 @@ function showArchive(id: string): void {
   // 关键档案 → 解锁线索
   if (d.id === 'mother_limit') {
     discoverClue(CLUE.MOTHER_CANT_LEAVE);
+    if (isSolved(PUZZLE.SEARCH_P09)) renderAfterArchive();
   }
   if (d.id === 'vessel_eval') {
     discoverClue(CLUE.PROTAGONIST_VESSEL);
     discoverClue(CLUE.SHENRAN_DECOY);
     markSolved(PUZZLE.SEARCH_P09);
     unlock('P10');
+    labTabs.hidden = false;
     renderAfterArchive();
   }
-  detail.scrollIntoView({ behavior: 'smooth' });
+  scrollToContent(detail);
 }
 
 document.getElementById('archiveBtn')!.addEventListener('click', searchArchive);
@@ -142,14 +145,21 @@ document.getElementById('goMonitor')!.addEventListener('click', () => switchView
 
 // ===== P10 监控 =====
 document.getElementById('monitorTitle')!.textContent = LAB.monitorTitle;
-(document.getElementById('monitorImg') as HTMLImageElement).src = IMG.labBlur;
 document.getElementById('monitorNote')!.textContent = LAB.monitorNote;
+document.getElementById('afterMonitorTitle')!.textContent = LAB.afterMonitor.title;
+document.getElementById('afterMonitorBody')!.innerHTML = LAB.afterMonitor.paragraphs
+  .map((p) => `<p>${escapeHtml(p)}</p>`).join('');
+document.getElementById('afterMonitorAlert')!.textContent = LAB.afterMonitor.alert;
+document.getElementById('goChat2')!.textContent = LAB.afterMonitor.button;
 
 function switchView(view: 'archive' | 'monitor'): void {
+  if (view === 'monitor' && !isSolved(PUZZLE.SEARCH_P09)) return;
   archiveView.hidden = view !== 'archive';
   monitorView.hidden = view !== 'monitor';
   labTabs.querySelectorAll('.lab-tab').forEach((t) => t.classList.toggle('active', (t as HTMLElement).dataset.view === view));
   if (view === 'monitor') {
+    // 监控图仅在玩家实际打开监控时加载。
+    (document.getElementById('monitorImg') as HTMLImageElement).src = IMG.labBlur;
     discoverClue(CLUE.SHELL_LEFTHAND);
     unlock('P11');
     (document.getElementById('afterMonitor') as HTMLElement).hidden = false;

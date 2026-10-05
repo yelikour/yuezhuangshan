@@ -1,5 +1,5 @@
 /**
- * 全能导航首页（仿 2345.com 风格）—— 游戏的拟真入口。
+ * 全能导航首页（虚构导航站风格）—— 游戏的拟真入口。
  *
  * 设计意图：玩家一进来以为自己打开的是个普通导航站。
  * 游戏的真正入口伪装成：邮箱小部件的"未读邮件"、旅游分类里的"岳桩山生态景区"链接。
@@ -11,6 +11,9 @@ import { setVolume, setMuted, setReduceMotion, setSubtitles, applyTheme } from '
 import { IMG } from '@data/assets';
 import { GAME_CLOCK, ENDING2, JOURNAL_UI } from '@data/content';
 import { truthProgress, truthTierText, journalGroups } from '@shared/truth';
+import { HOME_UI } from '@data/content';
+import { unreadMailCount } from '@shared/mail';
+import { matchTextSearch } from '@shared/normalize';
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 
@@ -27,7 +30,6 @@ interface NavLink {
   name: string;
   icon: string;       // 单字符 emoji/字母做图标底
   color: string;      // 图标背景色
-  url?: string;       // 外部占位（不真正跳转，仅装饰）
   game?: boolean;     // 是否为游戏内入口
   badge?: number;     // 红点
 }
@@ -46,57 +48,57 @@ const NAV: Record<string, NavLink[]> = {
   ],
   // 常用网站
   common: [
-    { name: '搜索引擎', icon: '🔍', color: '#2b6cff', url: 'https://www.baidu.com' },
-    { name: '导航犬', icon: '🐕', color: '#52c41a', url: 'https://www.hao123.com' },
-    { name: '网址大全', icon: '🌐', color: '#13c2c2', url: 'https://www.2345.com' },
-    { name: '万年历', icon: '📅', color: '#722ed1', url: 'https://wannianli.tianqi.com' },
-    { name: '天气预报', icon: '🌤', color: '#1890ff', url: 'https://weather.cma.cn' },
-    { name: '在线翻译', icon: '🌐', color: '#fa541c', url: 'https://fanyi.baidu.com' },
+    { name: '搜索引擎', icon: '🔍', color: '#2b6cff' },
+    { name: '导航犬', icon: '🐕', color: '#52c41a' },
+    { name: '网址大全', icon: '🌐', color: '#13c2c2' },
+    { name: '万年历', icon: '📅', color: '#722ed1' },
+    { name: '天气预报', icon: '🌤', color: '#1890ff' },
+    { name: '在线翻译', icon: '🌐', color: '#fa541c' },
   ],
   // 新闻资讯
   news: [
-    { name: '头条热点', icon: '🔴', color: '#f5222d', url: 'https://www.toutiao.com' },
-    { name: '国内要闻', icon: '📢', color: '#fa541c', url: 'https://news.sina.com.cn' },
-    { name: '科技频道', icon: '💡', color: '#1890ff', url: 'https://www.36kr.com' },
-    { name: '财经动态', icon: '📈', color: '#52c41a', url: 'https://finance.eastmoney.com' },
-    { name: '体育赛事', icon: '⚽', color: '#fa8c16', url: 'https://sports.sina.com.cn' },
-    { name: '国际时讯', icon: '🌍', color: '#13c2c2', url: 'https://news.ifeng.com' },
+    { name: '头条热点', icon: '🔴', color: '#f5222d' },
+    { name: '国内要闻', icon: '📢', color: '#fa541c' },
+    { name: '科技频道', icon: '💡', color: '#1890ff' },
+    { name: '财经动态', icon: '📈', color: '#52c41a' },
+    { name: '体育赛事', icon: '⚽', color: '#fa8c16' },
+    { name: '国际时讯', icon: '🌍', color: '#13c2c2' },
   ],
   // 影视娱乐
   ent: [
-    { name: '在线影视', icon: '🎬', color: '#cf1322', url: 'https://www.bilibili.com' },
-    { name: '音乐盒子', icon: '🎵', color: '#722ed1', url: 'https://music.163.com' },
-    { name: '小说阅读', icon: '📖', color: '#13c2c2', url: 'https://www.qidian.com' },
-    { name: '搞笑段子', icon: '😄', color: '#faad14', url: 'https://www.qiushibaike.com' },
-    { name: '直播平台', icon: '📡', color: '#eb2f96', url: 'https://live.bilibili.com' },
-    { name: '短视频', icon: '📱', color: '#fa541c', url: 'https://www.douyin.com' },
+    { name: '在线影视', icon: '🎬', color: '#cf1322' },
+    { name: '音乐盒子', icon: '🎵', color: '#722ed1' },
+    { name: '小说阅读', icon: '📖', color: '#13c2c2' },
+    { name: '搞笑段子', icon: '😄', color: '#faad14' },
+    { name: '直播平台', icon: '📡', color: '#eb2f96' },
+    { name: '短视频', icon: '📱', color: '#fa541c' },
   ],
   // 生活服务
   life: [
-    { name: '火车票', icon: '🚄', color: '#1890ff', url: 'https://www.12306.cn' },
-    { name: '酒店预订', icon: '🏨', color: '#fa541c', url: 'https://hotels.ctrip.com' },
-    { name: '外卖美食', icon: '🍜', color: '#fa8c16', url: 'https://www.meituan.com' },
-    { name: '招聘求职', icon: '💼', color: '#13c2c2', url: 'https://www.zhipin.com' },
-    { name: '房产家居', icon: '🏠', color: '#52c41a', url: 'https://www.lianjia.com' },
-    { name: '医院挂号', icon: '⚕', color: '#f5222d', url: 'https://www.guahao.com' },
+    { name: '火车票', icon: '🚄', color: '#1890ff' },
+    { name: '酒店预订', icon: '🏨', color: '#fa541c' },
+    { name: '外卖美食', icon: '🍜', color: '#fa8c16' },
+    { name: '招聘求职', icon: '💼', color: '#13c2c2' },
+    { name: '房产家居', icon: '🏠', color: '#52c41a' },
+    { name: '医院挂号', icon: '⚕', color: '#f5222d' },
   ],
   // 旅游出行
   travel: [
-    { name: '游记攻略', icon: '🗺', color: '#13c2c2', url: 'https://www.mafengwo.cn' },
-    { name: '机票查询', icon: '✈', color: '#1890ff', url: 'https://flights.ctrip.com' },
-    { name: '酒店预订', icon: '🏨', color: '#fa541c', url: 'https://hotels.ctrip.com' },
-    { name: '周边游', icon: '🧳', color: '#fa8c16', url: 'https://you.ctrip.com' },
-    { name: '景点门票', icon: '🎫', color: '#cf1322', url: 'https://piao.ctrip.com' },
-    { name: '户外装备', icon: '🏕', color: '#52c41a', url: 'https://www.8264.com' },
+    { name: '游记攻略', icon: '🗺', color: '#13c2c2' },
+    { name: '机票查询', icon: '✈', color: '#1890ff' },
+    { name: '酒店预订', icon: '🏨', color: '#fa541c' },
+    { name: '周边游', icon: '🧳', color: '#fa8c16' },
+    { name: '景点门票', icon: '🎫', color: '#cf1322' },
+    { name: '户外装备', icon: '🏕', color: '#52c41a' },
   ],
   // 小游戏
   game: [
-    { name: '益智小游戏', icon: '🧩', color: '#722ed1', url: 'https://www.4399.com' },
-    { name: '棋牌世界', icon: '🃏', color: '#cf1322', url: 'https://www.17173.com' },
-    { name: '消除达人', icon: '💎', color: '#13c2c2', url: 'https://www.7k7k.com' },
-    { name: '猜谜语', icon: '❓', color: '#faad14', url: 'https://zhidao.baidu.com' },
-    { name: '反应测试', icon: '⚡', color: '#1890ff', url: 'https://www.4399.com/flash' },
-    { name: '更多游戏', icon: '🎮', color: '#eb2f96', url: 'https://www.3dmgame.com' },
+    { name: '益智小游戏', icon: '🧩', color: '#722ed1' },
+    { name: '棋牌世界', icon: '🃏', color: '#cf1322' },
+    { name: '消除达人', icon: '💎', color: '#13c2c2' },
+    { name: '猜谜语', icon: '❓', color: '#faad14' },
+    { name: '反应测试', icon: '⚡', color: '#1890ff' },
+    { name: '更多游戏', icon: '🎮', color: '#eb2f96' },
   ],
 };
 
@@ -157,10 +159,8 @@ function renderNav(): void {
     if (!container) continue;
     container.innerHTML = NAV[key].map((link) => {
       const isGame = link.game;
-      const href = isGame ? gameUrl(link.name) : link.url ?? '#';
-      // 外部链接在新标签页打开；游戏入口当前页跳转
-      const target = isGame ? '' : ' target="_blank" rel="noopener noreferrer"';
-      return `<a class="nav-item" data-name="${escapeHtml(link.name)}" data-game="${isGame ? '1' : ''}" href="${href}"${target}>
+      const href = isGame ? gameUrl(link.name) : '#';
+      return `<a class="nav-item" data-name="${escapeHtml(link.name)}" data-game="${isGame ? '1' : '0'}" href="${href}">
         <div class="nav-icon" style="background:${link.color}">${link.icon}</div>
         <div class="nav-name">${escapeHtml(link.name)}</div>
         ${link.badge ? `<span class="nav-badge">${link.badge}</span>` : ''}
@@ -168,7 +168,14 @@ function renderNav(): void {
     }).join('');
   }
 
-  // 绑定点击：仅游戏入口需 JS 接管（外部链接交给浏览器原生跳转）
+  document.querySelectorAll<HTMLElement>('.nav-item[data-game="0"]').forEach((el) => {
+    el.addEventListener('click', (event) => {
+      event.preventDefault();
+      $('homeFeedback').textContent = HOME_UI.placeholderHint(el.dataset.name!);
+    });
+  });
+
+  // 游戏入口当前页跳转，演示项目只显示本地提示。
   document.querySelectorAll<HTMLElement>('.nav-item[data-game="1"]').forEach((el) => {
     el.addEventListener('click', (e) => {
       e.preventDefault();
@@ -182,39 +189,25 @@ function escapeHtml(s: string): string {
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!));
 }
 
-/** 顶部搜索：纯装饰，不真正外连 */
-/** 各搜索 tab 对应的真实搜索引擎模板（{q} 替换为关键词） */
-const SEARCH_ENGINES: Record<string, string> = {
-  web: 'https://www.baidu.com/s?wd={q}',
-  news: 'https://www.toutiao.com/search/?keyword={q}',
-  image: 'https://image.baidu.com/search/index?tn=baiduimage&word={q}',
-  video: 'https://search.bilibili.com/all?keyword={q}',
-  map: 'https://map.baidu.com/search/?querytype=s&wd={q}',
-};
-
-let currentEngine = 'web';
-
 function setupSearch(): void {
   const tabs = document.querySelectorAll('.search-tab');
   tabs.forEach((t) => {
     t.addEventListener('click', () => {
-      tabs.forEach((x) => x.classList.remove('active'));
+      tabs.forEach((x) => {
+        x.classList.remove('active');
+        x.setAttribute('aria-pressed', 'false');
+      });
       t.classList.add('active');
-      currentEngine = (t as HTMLElement).dataset.engine || 'web';
+      t.setAttribute('aria-pressed', 'true');
     });
   });
 
   const doSearch = () => {
     const q = ($('searchInput') as HTMLInputElement).value.trim();
     if (!q) return;
-    // 若搜的是"岳桩"，悄悄引导进景区（沉浸式钩子，当前页跳转）
-    if (/岳桩/.test(q)) {
-      enterGame('岳桩山景区');
-      return;
-    }
-    // 其余关键词跳真实搜索引擎（新标签页）
-    const tpl = SEARCH_ENGINES[currentEngine] || SEARCH_ENGINES.web;
-    window.open(tpl.replace('{q}', encodeURIComponent(q)), '_blank', 'noopener');
+    const match = NAV.yzs.find((link) => matchTextSearch(q, [link.name]));
+    if (match) enterGame(match.name);
+    else $('homeFeedback').textContent = HOME_UI.noResults(q);
   };
 
   $('searchBtn').addEventListener('click', doSearch);
@@ -233,26 +226,20 @@ function setupSearch(): void {
 /** 邮箱小部件：未读提示 + 点击进游戏 */
 function setupMailWidget(): void {
   const s = loadState();
-  const hasProgress = hasSave() && s.unlockedNodes.length > 1;
-  const unread = $('unreadCount');
+  const unread = unreadMailCount(s, 'inbox', true);
   const widget = $('mailWidget');
   const link = $('mailLink');
-
-  if (hasProgress) {
-    // 老玩家：未读归零，提示去收藏栏继续
-    unread.textContent = '0';
-    widget.classList.remove('has-unread');
-    $('mailStatus').innerHTML = `云雁邮 · 已读`;
-    link.textContent = '查看收件箱 →';
-    // 同步移除资料库区"云雁邮"的静态红点 badge，与右侧小部件已读状态保持一致
-    const mailNavBadge = document.querySelector('.nav-item[data-name="云雁邮"] .nav-badge');
-    if (mailNavBadge) mailNavBadge.textContent = '';
-    link.addEventListener('click', (e) => { e.preventDefault(); enterGame('云雁邮'); });
-  } else {
-    // 新玩家：1 封未读邀请函，点击进邮箱
-    widget.classList.add('has-unread');
-    link.addEventListener('click', (e) => { e.preventDefault(); enterGame('云雁邮'); });
+  widget.classList.toggle('has-unread', unread > 0);
+  $('mailStatus').innerHTML = unread > 0
+    ? `云雁邮 · 未读 <strong id="unreadCount">${unread}</strong>`
+    : '云雁邮 · 已读';
+  const badge = document.querySelector<HTMLElement>('.nav-item[data-name="云雁邮"] .nav-badge');
+  if (badge) {
+    badge.hidden = unread === 0;
+    badge.textContent = String(unread);
   }
+  // setupMailWidget 会在重开后重新调用；绑定只发生一次。
+  link.onclick = (e) => { e.preventDefault(); enterGame('云雁邮'); };
 }
 
 /** 日期小部件 */
@@ -263,9 +250,9 @@ function setupDate(): void {
 
 /* ===== 设置弹层 ===== */
 function setupSettings(): void {
-  const mask = $('settingsMask');
-  const open = () => { renderSettings(); mask.hidden = false; };
-  const close = () => { mask.hidden = true; };
+  const mask = $('settingsMask') as HTMLDialogElement;
+  const open = () => { renderSettings(); mask.showModal(); };
+  const close = () => { mask.close(); };
   $('openSettings').addEventListener('click', (e) => { e.preventDefault(); open(); });
   $('openSettings2').addEventListener('click', (e) => { e.preventDefault(); open(); });
   $('aboutLink').addEventListener('click', (e) => {
@@ -291,6 +278,7 @@ function setupSettings(): void {
     // loadState/saveState 从缓存写回，导致"重新开始"静默失效。
     resetState();
     renderSettings();
+    setupBookmarks();
     setupMailWidget();
     $('saveStatus').textContent = '已清除存档。';
     applyTheme();
@@ -374,7 +362,7 @@ function updateJournalHint(): void {
 
 function openJournal(): void {
   renderJournal();
-  $('journalMask').hidden = false;
+  ($('journalMask') as HTMLDialogElement).showModal();
   const body = $('journalBody');
   if (!body.dataset.hintBound) {
     body.dataset.hintBound = '1';
@@ -395,8 +383,8 @@ function renderJournal(): void {
     .filter((g) => g.found.length > 0 || g.missing > 0)
     .map((g) => `
       <div style="margin:0.5em 0">
-        <div style="font-size:0.85em; opacity:0.65">${escapeHtml(g.group)}
-          ${g.missing > 0 ? `<span style="opacity:0.55">（${g.missing} 条未寻获）</span>` : ''}
+        <div style="font-size:0.85em; opacity:0.75">${escapeHtml(g.group)}
+          ${g.missing > 0 ? `<span style="opacity:0.85">（${g.missing} 条未寻获）</span>` : ''}
         </div>
         <ul style="margin:0.2em 0; padding-left:1.1em; font-size:0.92em">
           ${g.found.map((f) => `<li>${escapeHtml(f)}</li>`).join('')}
@@ -429,16 +417,14 @@ function renderJournal(): void {
     <div class="modal-actions">
       <button class="btn" id="journalCloseBtn">${escapeHtml(JOURNAL_UI.closeLabel)}</button>
     </div>`;
-  $('journalCloseBtn').addEventListener('click', () => { $('journalMask').hidden = true; });
+  $('journalCloseBtn').addEventListener('click', () => { ($('journalMask') as HTMLDialogElement).close(); });
 }
 
 function setupJournal(): void {
-  $('closeJournal').addEventListener('click', () => { $('journalMask').hidden = true; });
+  const mask = $('journalMask') as HTMLDialogElement;
+  $('closeJournal').addEventListener('click', () => { mask.close(); });
   $('journalMask').addEventListener('click', (e) => {
-    if (e.target === $('journalMask')) $('journalMask').hidden = true;
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !$('journalMask').hidden) $('journalMask').hidden = true;
+    if (e.target === mask) mask.close();
   });
 }
 
@@ -450,4 +436,5 @@ setupJournal();
 setupMailWidget();
 setupDate();
 setupSettings();
+$('contentReminder').textContent = HOME_UI.contentReminder;
 applyTheme();

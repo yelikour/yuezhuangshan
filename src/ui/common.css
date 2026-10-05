@@ -7,6 +7,9 @@
 
 * { box-sizing: border-box; }
 
+/* flex/grid 的显示规则不能覆盖剧情与面板的隐藏状态。 */
+[hidden] { display: none !important; }
+
 html, body {
   margin: 0;
   padding: 0;
@@ -36,7 +39,8 @@ a { color: inherit; }
 
 /* 同时尊重系统级偏好 */
 @media (prefers-reduced-motion: reduce) {
-  * { animation: none !important; transition: none !important; }
+  * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  .typewriter span, .sfx-subtitle { opacity: 1 !important; }
 }
 
 /* ===== 字幕容器（subtitles 关时 .hidden 隐藏） ===== */

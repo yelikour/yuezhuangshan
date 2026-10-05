@@ -426,11 +426,13 @@ export const BACKEND = {
   welcome: '研讨会工作台 · 地方异闻与悬疑叙事创作研讨会',
   loginHint: '请使用邮箱中的会议账号与初始口令登录。',
   recordsTitle: '门禁与房卡记录 · 嘉宾：沈苒',
+  monitorTitle: '关联监控截图（维护通道内层 · 02:11）',
 };
 
 export const ENDING = {
   fakeMessage: {
-    time: '2026-06-21 03:02',
+    sender: '来自：沈苒（最后在线：2026-06-20 21:30）',
+    time: '2026-06-21 08:52',
     text: '别来找我，我已经回来了。',
   },
   photoDetails: [
@@ -452,6 +454,12 @@ export const ENDING = {
 };
 
 // ========== 第二阶段 ==========
+
+export const HOME_UI = {
+  contentReminder: '虚构悬疑作品 · 含失踪与心理操控主题 · 默认静音，体验选项见设置',
+  placeholderHint: (name: string) => `「${name}」是导航演示项目，暂未收录内容。`,
+  noResults: (query: string) => `未收录与「${query}」相关的内容。可以试试站点名称。`,
+};
 
 export const LAB = {
   welcome: '岳桩生态文化发展有限公司 · 研究部内网',
@@ -483,6 +491,16 @@ B-08  神经实验室`,
   monitorTitle: '岳圣桩维护通道 · 监控回放',
   monitor02_11: '通道内层闸机 · 02:11',
   monitorNote: '画面因地下信号干扰失真严重。注意：通行者按下闸机按钮时，使用的是【左手】。',
+  afterMonitor: {
+    title: '那不是她',
+    paragraphs: [
+      '画面里的人用左手按下了闸机。',
+      '但沈苒是右撇子——她在聊天里说过，"我用右手写字总蹭脏袖口"。',
+      '走进去的是她的身体，但不是她。是它，穿着她。',
+    ],
+    alert: '你的手机又震了。一个未知号码。',
+    button: '查看消息',
+  },
 };
 
 export const HALF_CHAT = {
@@ -504,6 +522,7 @@ export const HALF_CHAT = {
 
 export const ENDING2 = {
   title: '你的选择',
+  intro: '沈苒说，把证据带下山。但档案室里还有一把空着的神经连接椅。\n火柴也在你口袋里。\n——你怎么选？',
   choices: [
     {
       id: 'submit',
@@ -562,7 +581,7 @@ export const ENDING2 = {
   closingNote: '（本作为虚构作品。所有人物、机构、地点均为虚构。存档已保存。）',
   /** 回到选择：结局结果页返回三选项界面，配合结局图鉴集齐三结局（docs/game_design.md §6A.5） */
   rechooseLabel: '回到选择',
-  rechooseHint: '（另外两条路的结局，也已记入手记的图鉴。）',
+  rechooseHint: '（已见结局会记入手记的图鉴。回到选择，可以体验其他路线。）',
   /** 三结局的图鉴展示名（调查手记的结局槽位用） */
   endingNames: {
     submit: '提交档案',
@@ -744,7 +763,7 @@ export const FORUM_POSTS: ForumPost[] = [
 有谁知道怎么回事吗？`,
   },
   {
-    id: 'f2', user: '半山客', title: '十年前那个外乡登山客的事，有人还记得吗', date: '2019-03-02',
+    id: 'f2', user: '半山客', title: '那个外乡登山客的事，有人还记得吗', date: '2019-03-11',
     category: '旧事', replies: 23,
     snippet: '2019年正月那会儿，有个姓周的外乡人进山，后来就……',
     body: `2019年正月那会儿（好像是正月初十前后），有个姓周的外乡人进山，说是爬野山。

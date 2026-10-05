@@ -5,7 +5,7 @@ body.skin-home {
   --yz-card: #ffffff;
   --yz-text: #1f2329;
   --yz-text-soft: #646a73;
-  --yz-text-mute: #8f959e;
+  --yz-text-mute: #626975;
   --yz-line: #ebeef5;
   --yz-primary: #3a6df0;
   --yz-primary-soft: #eaf1ff;
@@ -63,6 +63,7 @@ body.skin-home .subtitle { color: var(--yz-text-mute); opacity: 1; }
   width: 34px; height: 34px; border-radius: 9px;
   background: linear-gradient(135deg, #3a6df0 0%, #5b8def 100%);
   color: #fff; font-size: 18px; margin-right: 4px;
+  -webkit-text-fill-color: #fff;
   box-shadow: 0 2px 6px rgba(58,109,240,0.35);
 }
 .logo-text .logo-accent {
@@ -263,23 +264,30 @@ body.skin-home .subtitle { color: var(--yz-text-mute); opacity: 1; }
 .home-footer a { color: var(--yz-text-soft); text-decoration: none; margin: 0 6px; transition: color .15s; }
 .home-footer a:hover { color: var(--yz-primary); }
 .footer-sep { color: var(--yz-line); margin: 0 2px; }
-.footer-note { display: block; margin-top: 6px; color: #c0c4cc; }
+.footer-note { display: block; margin-top: 6px; color: var(--yz-text-mute); }
 
 /* ---- 设置弹层 ---- */
-.modal-mask[hidden] { display: none !important; }
+.modal-mask:not([open]) { display: none; }
+.modal-mask[open] { display: flex; }
 .modal-mask {
-  position: fixed; inset: 0; background: rgba(20,22,28,0.5);
-  display: flex; align-items: center; justify-content: center; z-index: 999;
-  backdrop-filter: blur(2px);
+  position: fixed; inset: 0; background: transparent;
+  align-items: center; justify-content: center; z-index: 999;
+  margin: 0; padding: 12px; border: 0;
+  width: 100vw; height: 100dvh; max-width: none; max-height: none;
+}
+.modal-mask::backdrop {
+  background: rgba(20,22,28,0.5); backdrop-filter: blur(2px);
 }
 .modal {
   background: #2a2d33; color: #e8e8ea; border-radius: 14px;
   width: 460px; max-width: 92vw; padding: 0;
   box-shadow: 0 12px 48px rgba(0,0,0,0.45);
+  display: flex; flex-direction: column; max-height: calc(100dvh - 24px);
 }
 .modal-head {
   display: flex; justify-content: space-between; align-items: center;
   padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.1);
+  flex-shrink: 0;
 }
 .modal-head h3 { margin: 0; font-size: 16px; font-weight: 600; }
 .modal-close {
@@ -287,7 +295,7 @@ body.skin-home .subtitle { color: var(--yz-text-mute); opacity: 1; }
   font-size: 18px; cursor: pointer; padding: 0 4px; line-height: 1;
 }
 .modal-close:hover { color: #fff; }
-.modal-body { padding: 18px 20px; }
+.modal-body { padding: 18px 20px; overflow-y: auto; min-height: 0; }
 .modal-body .settings-row { color: #e8e8ea; align-items: center; }
 .modal-body .settings-row label { min-width: 8em; color: #ccc; }
 .modal-body input[type="range"] { accent-color: #3a6df0; }
@@ -296,7 +304,7 @@ body.skin-home .subtitle { color: var(--yz-text-mute); opacity: 1; }
   font-size: 12px; color: #b8b8b8; background: rgba(255,255,255,0.05);
   padding: 11px; border-radius: 8px; line-height: 1.65;
 }
-.modal-actions { display: flex; align-items: center; gap: 12px; margin-top: 14px; }
+.modal-actions { display: flex; align-items: center; gap: 12px; margin-top: 14px; flex-wrap: wrap; }
 .modal-actions .btn { color: #e8e8ea; }
 
 /* ---- 调查手记弹层：可滚动正文 + 底部滚动提示 ---- */
@@ -312,12 +320,21 @@ body.skin-home .subtitle { color: var(--yz-text-mute); opacity: 1; }
   padding: 8px 20px 14px; text-align: center;
   font-size: 12px; color: #9aa0a8; /* 5.2:1 */
   border-top: 1px dashed rgba(255,255,255,0.12);
+  flex-shrink: 0;
 }
+
+.home-feedback { margin: 5px 0 0; color: #595f6d; font-size: 12px; }
+.home-feedback:empty { display: none; }
+.content-reminder { flex-basis: 100%; color: #595f6d; font-size: 12px; }
 
 /* ---- 响应式 ---- */
 @media (max-width: 880px) {
-  .home-wrap { grid-template-columns: 1fr; grid-template-areas: "header" "bookmark" "main" "sidebar" "footer"; }
-  .home-header { grid-template-columns: 1fr; }
+  .home-wrap { grid-template-columns: minmax(0, 1fr); grid-template-areas: "header" "bookmark" "main" "sidebar" "footer"; }
+  .home-header { grid-template-columns: minmax(0, 1fr); }
   .nav-grid { grid-template-columns: repeat(4, 1fr); }
   .logo-slogan { padding-left: 0; }
+}
+@media (max-width: 480px) {
+  .search-tab { padding-inline: 10px; }
+  .home-header { padding-inline: 16px; }
 }

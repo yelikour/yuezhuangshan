@@ -1,3 +1,4 @@
+import { scrollToContent } from '@shared/motion';
 /**
  * P03 虚构聊天"谛听"：互动对话（玩家选选项推进）+ 含蓄备忘录 + 历史记录。
  */
@@ -59,7 +60,7 @@ function appendHerMessages(nodeId: string): void {
   }
   // 根据节点内容收集疑点（含蓄）
   collectDoubts(nodeId);
-  dialogEl.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  scrollToContent(dialogEl, 'end');
 }
 
 /** 根据经过的节点，用含蓄措辞记录疑点 */

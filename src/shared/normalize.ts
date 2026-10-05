@@ -95,6 +95,22 @@ export function matchSearch(query: string, targetKeywords: string[]): boolean {
   return expanded.some((kw) => q.includes(kw));
 }
 
+/** 全文检索：与关键词检索共用标准化和有限同义词，避免页面自写匹配。 */
+export function matchTextSearch(query: string, texts: string[]): boolean {
+  const q = normalizeInput(query);
+  if (!q) return false;
+  const queries = new Set(expandKeywords([q]));
+  for (const [canonical, synonyms] of Object.entries(SYNONYMS)) {
+    if ([canonical, ...synonyms].some((word) => normalizeInput(word) === q)) {
+      expandKeywords([canonical]).forEach((word) => queries.add(word));
+    }
+  }
+  return texts.some((text) => {
+    const normalized = normalizeInput(text);
+    return [...queries].some((word) => normalized.includes(word));
+  });
+}
+
 /**
  * 口令比对：玩家输入是否等于给定答案（答案应已标准化存储）。
  * 对玩家输入做相同标准化后比对。

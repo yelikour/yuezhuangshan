@@ -7,9 +7,9 @@ import { bootstrap, escapeHtml } from '@shared/bootstrap';
 import { discoverClue, unlock } from '@shared/progress';
 import { CLUE } from '@data/clues';
 import { ENDING } from '@data/content';
-import { loadState } from '@shared/storage';
 import { IMG } from '@data/assets';
 import { playSfx, stopSfx, showFloatingSubtitle } from '@shared/sfx';
+import { prefersReducedMotion } from '@shared/motion';
 
 const { denied } = bootstrap({
   pageId: 'ending', brand: '——', domain: 'localhost', skin: 'ending', node: 'P07',
@@ -19,9 +19,9 @@ if (denied) throw new Error('access denied');
 
 const root = document.getElementById('root')!;
 root.hidden = false;
+document.getElementById('senderStatus')!.textContent = ENDING.fakeMessage.sender;
 
-const s = loadState();
-const reduceMotion = s.reduceMotion;
+const reduceMotion = prefersReducedMotion();
 
 // 氛围底噪：进入结尾页即循环播放，贯穿整个演出（默认静音时无声，仅字幕）
 playSfx('ambientDrone', {
@@ -68,8 +68,11 @@ setTimeout(() => {
     ENDING.photoDetails.map((d) => `<li class="readable">${escapeHtml(d)}</li>`).join('') +
     `</ul>`;
 
-  // 再过一会儿显示阶段结束页
-  setTimeout(() => {
+  // 关键照片与解释必须保留到玩家读完，主动继续才进入结束页。
+  const continueBtn = document.createElement('button');
+  continueBtn.className = 'btn';
+  continueBtn.textContent = '继续调查';
+  continueBtn.addEventListener('click', () => {
     (document.getElementById('scene') as HTMLElement).hidden = true;
     const end = document.getElementById('endPage')!;
     end.hidden = false;
@@ -78,5 +81,6 @@ setTimeout(() => {
     // 第一阶段结束 → 开放第二阶段入口（P08 依赖 P07，此时解锁）。
     // 让首页收藏栏显示"实验室内网"，"继续游戏"能跳到 lab。
     unlock('P08');
-  }, reduceMotion ? 400 : 2600);
+  }, { once: true });
+  cluesEl.appendChild(continueBtn);
 }, totalDelay);

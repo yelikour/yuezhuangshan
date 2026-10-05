@@ -1,3 +1,4 @@
+import { scrollToContent } from '@shared/motion';
 /**
  * 岳桩村论坛（SIDE_FORUM）：朴素 BBS，混合生活帖/求助帖/旧传闻。
  * 支线 D：存档区（被删帖残片）+ 搜索屏蔽词（"无结果即叙事"）。
@@ -6,7 +7,7 @@ import { bootstrap, escapeHtml } from '@shared/bootstrap';
 import { FORUM_POSTS, FORUM_ARCHIVE_UI, type ForumPost } from '@data/content';
 import { FORUM_DELETED, FORUM_CENSOR_KEYWORDS, CENSOR_NOTICE, CLUE } from '@data/clues';
 import { discoverClue } from '@shared/progress';
-import { matchSearch } from '@shared/normalize';
+import { matchSearch, matchTextSearch } from '@shared/normalize';
 import { playSfxWithSubtitle } from '@shared/sfx';
 
 const { denied } = bootstrap({
@@ -55,7 +56,7 @@ function showPost(id: string): void {
       <div style="font-size:13px; color:#999">— 本帖有 ${p.replies} 条回复，暂未显示 —</div>
     </div>`;
   document.getElementById('backToList')!.addEventListener('click', backToList);
-  detail.scrollIntoView({ behavior: 'smooth' });
+  scrollToContent(detail);
 }
 
 function backToList(): void {
@@ -75,22 +76,26 @@ function applyFilter(): void {
   let posts = currentFilter === '全部' ? FORUM_POSTS : FORUM_POSTS.filter((p) => p.category === currentFilter);
   if (q) {
     posts = posts.filter((p) =>
-      p.title.toLowerCase().includes(q.toLowerCase()) || (p.body ?? p.snippet).toLowerCase().includes(q.toLowerCase()),
+      matchTextSearch(q, [p.title, p.body ?? p.snippet]),
     );
   }
+  backToList();
   render(posts);
 
   // 支线 D：命中屏蔽词 → 显示"部分结果未予显示"系统条（屏蔽行为本身即线索）
   const censorHit = matchSearch(q, FORUM_CENSOR_KEYWORDS);
   if (q && censorHit) {
     discoverClue(CLUE.SEARCH_CENSORSHIP);
-    const notice = document.createElement('div');
+    let notice = document.getElementById('censorNotice');
+    const isNewNotice = !notice;
+    if (!notice) notice = document.createElement('div');
     notice.id = 'censorNotice';
+    notice.setAttribute('role', 'status');
     notice.style.cssText = 'margin:0.4em 0; padding:0.4em 0.7em; background:#fff7e6; border:1px solid #e6d19a; color:#7a5c00; font-size:13px; border-radius:3px';
     notice.textContent = CENSOR_NOTICE(FORUM_DELETED.length);
     document.getElementById('forumFilter')!.after(notice);
     // 屏蔽系统条出现：短促电流杂音（信号被截断的手感）
-    playSfxWithSubtitle('glitchClick', { volumeScale: 0.4 });
+    if (isNewNotice) playSfxWithSubtitle('glitchClick', { volumeScale: 0.4 });
   } else {
     document.getElementById('censorNotice')?.remove();
   }
@@ -123,7 +128,7 @@ document.getElementById('archiveLink')!.addEventListener('click', (e) => {
   archiveSection.hidden = false;
   // 首次打开存档区：水滴回声（地下空间的暗示）
   playSfxWithSubtitle('waterDrip', { volumeScale: 0.5 });
-  archiveSection.scrollIntoView({ behavior: 'smooth' });
+  scrollToContent(archiveSection);
 });
 
 document.getElementById('archiveBack')!.addEventListener('click', () => {

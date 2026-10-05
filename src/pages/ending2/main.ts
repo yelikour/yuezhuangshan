@@ -6,6 +6,7 @@ import { ENDING2 } from '@data/content';
 import { loadState, updateState } from '@shared/storage';
 import { playSfx, stopSfx, showFloatingSubtitle } from '@shared/sfx';
 import { truthProgress, truthTierText } from '@shared/truth';
+import { prefersReducedMotion, scrollToContent } from '@shared/motion';
 
 const { denied } = bootstrap({
   pageId: 'ending2', brand: '——', domain: 'localhost', skin: 'ending', node: 'P12',
@@ -16,6 +17,7 @@ if (denied) throw new Error('access denied');
 const root = document.getElementById('root')!;
 root.hidden = false;
 document.getElementById('title')!.textContent = ENDING2.title;
+document.getElementById('choiceIntro')!.textContent = ENDING2.intro;
 
 // 氛围底噪（贯穿选择与结局）
 playSfx('ambientDrone', { loop: true, volumeScale: 0.5, onSubtitle: (t) => showFloatingSubtitle(t) });
@@ -54,8 +56,12 @@ function showResult(id: string): void {
   (document.getElementById('choiceView') as HTMLElement).hidden = true;
   const rv = document.getElementById('resultView')!;
   rv.hidden = false;
+  document.getElementById('closingTitle')!.textContent = '';
+  document.getElementById('closingNote')!.textContent = '';
+  document.getElementById('truthPanel')!.hidden = true;
+  document.getElementById('closingActions')!.hidden = true;
 
-  const reduceMotion = loadState().reduceMotion;
+  const reduceMotion = prefersReducedMotion();
   const body = document.getElementById('resultBody')!;
   body.innerHTML = `<h2 style="color:#b8b8b8">「${escapeHtml(choice.label)}」</h2>`;
 
@@ -80,7 +86,7 @@ function showResult(id: string): void {
     renderTruth();
     // "成为容器"结局：渐黑 + 不安
     if (id === 'vessel') {
-      document.body.style.transition = 'background 4s';
+      document.body.style.transition = reduceMotion ? '' : 'background 4s';
       document.body.style.background = '#000';
     }
     // 回到选择：结局已计数，允许重选其余结局集齐图鉴（docs §6A.5）
@@ -99,7 +105,8 @@ function showResult(id: string): void {
       actions.hidden = true;
       (document.getElementById('choiceView') as HTMLElement).hidden = false;
       renderChoices();
-      window.scrollTo({ top: 0 });
+      if (!prefersReducedMotion()) window.scrollTo({ top: 0 });
+      choicesEl.querySelector<HTMLElement>('.ending-choice')?.focus({ preventScroll: prefersReducedMotion() });
     });
     actions.appendChild(backBtn);
     const hint = document.createElement('span');
@@ -108,7 +115,7 @@ function showResult(id: string): void {
     actions.appendChild(hint);
   }, totalDelay);
 
-  rv.scrollIntoView({ behavior: 'smooth' });
+  scrollToContent(rv);
 }
 
 /** 真相完成度 + 证据清单（结局后的二周目驱动） */

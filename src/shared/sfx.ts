@@ -13,6 +13,7 @@
  */
 import { loadState } from './storage';
 import { SFX as SFX_FILES } from '@data/assets';
+import { prefersReducedMotion } from './motion';
 
 export type SfxName = keyof typeof SFX_FILES;
 
@@ -25,22 +26,26 @@ export const SFX_SUBTITLE: Record<SfxName, string> = {
 };
 
 /** 单例 audio 池，避免重复创建 */
-const pool = new Map<SfxName, HTMLAudioElement>();
+interface Playback {
+  audio: HTMLAudioElement | null;
+  loop: boolean;
+  volumeScale: number;
+  active: boolean;
+}
+const pool = new Map<SfxName, Playback>();
 
-function getAudio(name: SfxName): HTMLAudioElement {
-  let el = pool.get(name);
-  if (!el) {
-    el = new Audio(SFX_FILES[name]);
-    el.preload = 'auto';
-    pool.set(name, el);
+function getAudio(name: SfxName, playback: Playback): HTMLAudioElement {
+  if (!playback.audio) {
+    playback.audio = new Audio(SFX_FILES[name]);
+    playback.audio.preload = 'none';
   }
-  return el;
+  return playback.audio;
 }
 
 /** 当前是否允许发声（综合静音 + 减少动态） */
 function canPlaySound(): boolean {
   const s = loadState();
-  return !s.muted && !s.reduceMotion;
+  return !s.muted && !prefersReducedMotion();
 }
 
 export interface PlayOptions {
@@ -55,9 +60,21 @@ export interface PlayOptions {
 /**
  * 播放一个音效。无论是否静音都会触发字幕（字幕独立于声音）。
  */
-export function playSfx(name: SfxName, opts: PlayOptions = {}): HTMLAudioElement {
+export function playSfx(name: SfxName, opts: PlayOptions = {}): HTMLAudioElement | null {
   const { loop = false, volumeScale = 1, onSubtitle } = opts;
-  const el = getAudio(name);
+  const playback = pool.get(name) ?? { audio: null, loop, volumeScale, active: false };
+  playback.loop = loop;
+  playback.volumeScale = Number.isFinite(volumeScale) ? Math.max(0, Math.min(1, volumeScale)) : 1;
+  playback.active = true;
+  pool.set(name, playback);
+  const s = loadState();
+  if (s.subtitles && onSubtitle) onSubtitle(SFX_SUBTITLE[name]);
+  if (!canPlaySound()) {
+    playback.audio?.pause();
+    if (!loop) playback.active = false;
+    return playback.audio;
+  }
+  const el = getAudio(name, playback);
 
   // 重置（非循环音效重复播放时从头开始）
   if (!loop) {
@@ -67,8 +84,7 @@ export function playSfx(name: SfxName, opts: PlayOptions = {}): HTMLAudioElement
   el.loop = loop;
 
   // 音量
-  const s = loadState();
-  const vol = canPlaySound() ? s.volume * volumeScale : 0;
+  const vol = s.volume * playback.volumeScale;
   el.volume = Math.max(0, Math.min(1, vol));
   el.muted = !canPlaySound();
 
@@ -77,45 +93,46 @@ export function playSfx(name: SfxName, opts: PlayOptions = {}): HTMLAudioElement
     // 自动播放被拒：静默失败（玩家交互后会恢复）
   });
 
-  // 字幕（独立于声音，只要字幕开关开就显示）
-  if (s.subtitles && onSubtitle) {
-    onSubtitle(SFX_SUBTITLE[name]);
-  }
-
   return el;
 }
 
 /** 停止某个音效 */
 export function stopSfx(name: SfxName): void {
-  const el = pool.get(name);
-  if (el) {
-    el.pause();
-    el.currentTime = 0;
+  const playback = pool.get(name);
+  if (playback) {
+    playback.active = false;
+    if (playback.audio) {
+      playback.audio.pause();
+      playback.audio.currentTime = 0;
+    }
   }
 }
 
 /** 停止所有音效（页面切换/重新开始时调用） */
 export function stopAllSfx(): void {
-  pool.forEach((el) => {
-    el.pause();
-    el.currentTime = 0;
-  });
+  pool.forEach((_, name) => stopSfx(name));
 }
 
 /** 设置变更时同步所有正在播放的音效音量/静音状态 */
 export function refreshSfxSettings(): void {
   const s = loadState();
-  pool.forEach((el, name) => {
-    const vol = canPlaySound() ? s.volume : 0;
-    el.volume = Math.max(0, Math.min(1, vol));
-    el.muted = !canPlaySound();
-    // 若减少动态或静音，停止循环音
-    if (!canPlaySound() && el.loop) {
-      el.pause();
-    } else if (canPlaySound() && el.loop && el.paused) {
+  const allowed = canPlaySound();
+  pool.forEach((playback, name) => {
+    if (!playback.active) return;
+    if (!allowed) {
+      playback.audio?.pause();
+      if (!playback.loop) playback.active = false;
+      return;
+    }
+    // 静音期间只保存循环意图；解除静音时才创建 Audio。
+    if (!playback.audio && !playback.loop) return;
+    const el = getAudio(name, playback);
+    el.loop = playback.loop;
+    el.volume = Math.max(0, Math.min(1, s.volume * playback.volumeScale));
+    el.muted = false;
+    if (playback.loop && el.paused) {
       el.play().catch(() => {});
     }
-    void name;
   });
 }
 
@@ -132,14 +149,17 @@ export function playSfxWithSubtitle(name: SfxName, opts: { volumeScale?: number 
 
 /** 在屏幕底部短暂浮现一行字幕，3 秒后自动消失 */
 export function showFloatingSubtitle(text: string): void {
+  if (!loadState().subtitles) return;
   // 若已存在先移除
   document.querySelectorAll('.sfx-subtitle').forEach((el) => el.remove());
   const el = document.createElement('div');
-  el.className = 'sfx-subtitle';
+  el.className = 'sfx-subtitle subtitle';
+  el.setAttribute('role', 'status');
   el.textContent = text;
   document.body.appendChild(el);
-  // reduce-motion 下不自动消失，停留更久；否则 3s 后移除
-  const s = loadState();
-  const ttl = s.reduceMotion ? 4500 : 3000;
+  // reduce-motion 下停留更久；否则 3s 后移除。
+  const ttl = prefersReducedMotion() ? 4500 : 3000;
   setTimeout(() => el.remove(), ttl);
 }
+
+if (typeof window !== 'undefined') window.addEventListener('pagehide', stopAllSfx);

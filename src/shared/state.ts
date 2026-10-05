@@ -68,19 +68,40 @@ export function createDefaultState(): GameState {
   };
 }
 
-/** 浅合并用于安全加载（兼容旧存档缺失字段） */
-export function mergeState(parsed: Partial<GameState>): GameState {
+/** 存档是不可信输入，逐字段校验并兼容旧存档。 */
+export function mergeState(parsed: unknown): GameState {
   const def = createDefaultState();
+  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return def;
+  const value = parsed as Record<string, unknown>;
+  const strings = (v: unknown): string[] => Array.isArray(v)
+    ? [...new Set(v.filter((item): item is string => typeof item === 'string' && item.trim().length > 0))]
+    : [];
+  const bool = (v: unknown, fallback: boolean) => typeof v === 'boolean' ? v : fallback;
+  const timestamp = (v: unknown, fallback: number) =>
+    typeof v === 'number' && Number.isFinite(v) && v > 0 ? v : fallback;
+  const counts = (v: unknown, maximum: number): Record<string, number> => {
+    if (!v || typeof v !== 'object' || Array.isArray(v)) return {};
+    return Object.fromEntries(Object.entries(v).filter(([key, count]) =>
+      key !== '__proto__' && key !== 'constructor' && key !== 'prototype' &&
+      typeof count === 'number' && Number.isSafeInteger(count) && count >= 0 && count <= maximum,
+    )) as Record<string, number>;
+  };
   return {
     ...def,
-    ...parsed,
-    attempts: { ...def.attempts, ...(parsed.attempts ?? {}) },
-    hintLevel: { ...def.hintLevel, ...(parsed.hintLevel ?? {}) },
-    visitedPages: parsed.visitedPages ?? [],
-    discoveredClues: parsed.discoveredClues ?? [],
-    unlockedNodes: parsed.unlockedNodes ?? def.unlockedNodes,
-    solvedPuzzles: parsed.solvedPuzzles ?? [],
-    readMails: parsed.readMails ?? [],
-    endingsSeen: parsed.endingsSeen ?? [],
+    createdAt: timestamp(value.createdAt, def.createdAt),
+    updatedAt: timestamp(value.updatedAt, def.updatedAt),
+    attempts: counts(value.attempts, Number.MAX_SAFE_INTEGER),
+    hintLevel: counts(value.hintLevel, 3) as GameState['hintLevel'],
+    visitedPages: strings(value.visitedPages) as PageId[],
+    discoveredClues: strings(value.discoveredClues),
+    unlockedNodes: [...new Set(['P00', ...strings(value.unlockedNodes)])] as NodeId[],
+    solvedPuzzles: strings(value.solvedPuzzles),
+    readMails: strings(value.readMails),
+    endingsSeen: strings(value.endingsSeen).filter((id) => ['submit', 'burn', 'vessel'].includes(id)),
+    volume: typeof value.volume === 'number' && Number.isFinite(value.volume)
+      ? Math.max(0, Math.min(1, value.volume)) : def.volume,
+    muted: bool(value.muted, def.muted),
+    reduceMotion: bool(value.reduceMotion, def.reduceMotion),
+    subtitles: bool(value.subtitles, def.subtitles),
   };
 }

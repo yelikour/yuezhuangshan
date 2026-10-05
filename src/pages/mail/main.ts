@@ -5,11 +5,11 @@
 import { bootstrap, escapeHtml } from '@shared/bootstrap';
 import { discoverClue, unlock, isNodeActive } from '@shared/progress';
 import { CLUE } from '@data/clues';
-import { MAIL } from '@data/content';
 import { IMG } from '@data/assets';
 import { loadState, updateState } from '@shared/storage';
 import { playSfxWithSubtitle } from '@shared/sfx';
-import type { NodeId } from '@shared/state';
+import { ALL_MAILS as allMails, type MailItem } from '@data/mail';
+import { visibleMails as getVisibleMails } from '@shared/mail';
 
 const { denied } = bootstrap({
   pageId: 'mail', brand: '云雁邮', domain: 'yunyan.mail', skin: 'mail', node: 'P01',
@@ -20,53 +20,8 @@ if (denied) throw new Error('access denied');
 const root = document.getElementById('root')!;
 root.hidden = false;
 
-interface MailItem {
-  id: string;
-  from: string;
-  to?: string;
-  subject: string;
-  date: string;
-  body: string;
-  key?: string;
-  /** 需要解锁到此节点才显示（默认 P01） */
-  requireNode?: NodeId;
-  /** 需要先发现该线索才显示（跨站条件，如论坛回收站） */
-  requireClue?: string;
-  /** 所属文件夹（默认收件箱） */
-  folder?: 'inbox' | 'spam';
-  /** 标记为"新到达"（当玩家刚解锁该节点时） */
-  isNew?: boolean;
-}
-
-/** 邮件按进度分批到达：requireNode 越靠后，到达越晚 */
-const allMails: MailItem[] = [
-  { id: 'awardNotice', ...MAIL.awardNotice, requireNode: 'P01' },
-  { id: 'bankStatement', ...MAIL.bankStatement, requireNode: 'P01' },
-  { id: 'preInvite', ...MAIL.preInvite, requireNode: 'P01' },
-  { id: 'invite', ...MAIL.invite, key: CLUE.INVITE, requireNode: 'P01' },
-  { id: 'schedule', ...MAIL.schedule, requireNode: 'P01' },
-  { id: 'checkin', ...MAIL.checkin, key: CLUE.CREDENTIAL_HINT, requireNode: 'P01' },
-  { id: 'hotelConfirm', ...MAIL.hotelConfirm, requireNode: 'P01' },
-  { id: 'peerAuthor', ...MAIL.peerAuthor, requireNode: 'P02' },       // 到达景区后
-  { id: 'shenranWarn', ...MAIL.shenranWarn, requireNode: 'P04' },     // 发现失联后
-  // 支线 D：周衍回信（从论坛存档区发现他的联系方式后到达）
-  { id: 'zhouYanLetter', ...MAIL.zhouYanLetter, key: CLUE.ZHOU_FAMILY, requireClue: CLUE.FORUM_ARCHIVE },
-  // 垃圾箱：推广/系统/优惠券（氛围干扰）
-  { id: 'spam', ...MAIL.spam, folder: 'spam', requireNode: 'P01' },
-  { id: 'spamGame', ...MAIL.spamGame, folder: 'spam', requireNode: 'P01' },
-  { id: 'spamCoupon', ...MAIL.spamCoupon, folder: 'spam', requireNode: 'P01' },
-  // 支线 E：陆远被隔离的两封邮件
-  { id: 'luYanSpam1', ...MAIL.luYanSpam1, key: CLUE.LUYUAN_INTERCEPT, folder: 'spam', requireNode: 'P04' },
-  { id: 'luYanSpam2', ...MAIL.luYanSpam2, key: CLUE.LUYUAN_SILENCED, folder: 'spam', requireNode: 'P06' },
-];
-
-/** 根据当前进度过滤可见邮件，按日期倒序。用 isNodeActive 确保"玩家真正到达过"该进度 */
 function visibleMails(): MailItem[] {
-  const clues = loadState().discoveredClues;
-  return allMails
-    .filter((m) => isNodeActive(m.requireNode ?? 'P01'))
-    .filter((m) => !m.requireClue || clues.includes(m.requireClue))
-    .sort((a, b) => (a.date < b.date ? 1 : -1));
+  return getVisibleMails(loadState());
 }
 
 // 已读邮件集合：从存档加载，刷新后不回弹（持久化于 GameState.readMails）。
@@ -84,6 +39,7 @@ let spamVisited = false;
 view.innerHTML = `<div class="mail-view-empty">← 从左侧选择一封邮件查看</div>`;
 
 function renderList(): void {
+  readSet = new Set(loadState().readMails);
   const mails = visibleMails().filter((m) => (m.folder ?? 'inbox') === currentFolder);
   if (mails.length === 0 && !isNodeActive('P01')) {
     // 直接输入 URL 进入（未从导航首页开始）：给出行内引导而非空白列表
@@ -155,8 +111,6 @@ function open(id: string): void {
   updateState((st) => {
     if (!st.readMails.includes(id)) st.readMails.push(id);
   });
-  renderList();
-  list.querySelectorAll<HTMLElement>('.mail-item').forEach((el) => el.classList.toggle('active', el.dataset.id === id));
   view.innerHTML = `
     <div style="opacity:0.7; font-size:0.85em">发件人：${escapeHtml(m.from)}</div>
     <div style="opacity:0.7; font-size:0.85em">收件人：${escapeHtml(m.to ?? '我')}</div>
@@ -174,6 +128,8 @@ function open(id: string): void {
     unlock('P02');
     unlock('P03');
   }
+  renderList();
+  list.querySelectorAll<HTMLElement>('.mail-item').forEach((el) => el.classList.toggle('active', el.dataset.id === id));
 }
 
 /** 未读计数提示（显示在邮件列表上方） */

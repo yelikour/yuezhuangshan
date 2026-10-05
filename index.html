@@ -16,15 +16,15 @@
         <span class="logo-slogan">上网从这里开始</span>
       </div>
       <div class="home-search">
-        <div class="search-tabs" role="tablist">
-          <button class="search-tab active" data-engine="web" role="tab">网 页</button>
-          <button class="search-tab" data-engine="news" role="tab">新 闻</button>
-          <button class="search-tab" data-engine="image" role="tab">图 片</button>
-          <button class="search-tab" data-engine="video" role="tab">视 频</button>
-          <button class="search-tab" data-engine="map" role="tab">地 图</button>
+        <div class="search-tabs" role="group" aria-label="检索分类">
+          <button class="search-tab active" data-engine="web" aria-pressed="true">网 页</button>
+          <button class="search-tab" data-engine="news" aria-pressed="false">新 闻</button>
+          <button class="search-tab" data-engine="image" aria-pressed="false">图 片</button>
+          <button class="search-tab" data-engine="video" aria-pressed="false">视 频</button>
+          <button class="search-tab" data-engine="map" aria-pressed="false">地 图</button>
         </div>
         <div class="search-box">
-          <input type="text" id="searchInput" class="search-input" placeholder="输入关键词，探索全网" />
+          <input type="text" id="searchInput" class="search-input" aria-label="站内检索" placeholder="输入关键词，检索已收录站点" />
           <button class="search-btn" id="searchBtn">搜索</button>
         </div>
         <div class="search-hot">
@@ -34,6 +34,7 @@
           <a href="#" data-key="推理小说">推理小说</a>
           <a href="#" data-key="深山徒步">深山徒步</a>
         </div>
+        <p id="homeFeedback" class="home-feedback" role="status"></p>
       </div>
       <div class="home-tools">
         <a href="#" id="openSettings" title="个性化设置">⚙ 设置</a>
@@ -44,6 +45,7 @@
     <nav class="bookmark-bar" aria-label="收藏栏">
       <span class="bookmark-label">★ 收藏</span>
       <div class="bookmark-items" id="bookmarkItems"></div>
+      <small id="contentReminder" class="content-reminder"></small>
     </nav>
 
     <!-- 主体：网址导航 -->
@@ -124,8 +126,8 @@
   </div>
 
   <!-- 调查手记弹层（线索回顾 + 真相完成度 + 结局图鉴） -->
-  <div class="modal-mask" id="journalMask" hidden>
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="journalTitle">
+  <dialog class="modal-mask" id="journalMask" aria-labelledby="journalTitle">
+    <div class="modal">
       <div class="modal-head">
         <h3 id="journalTitle">调查手记</h3>
         <button class="modal-close" id="closeJournal" aria-label="关闭">✕</button>
@@ -133,11 +135,11 @@
       <div class="modal-body journal-body" id="journalBody"></div>
       <div class="journal-hint" id="journalHint" hidden aria-hidden="true">▼ 下滑查看更多</div>
     </div>
-  </div>
+  </dialog>
 
   <!-- 设置弹层（原启动器的体验设置，藏到这里） -->
-  <div class="modal-mask" id="settingsMask" hidden>
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+  <dialog class="modal-mask" id="settingsMask" aria-labelledby="settingsTitle">
+    <div class="modal">
       <div class="modal-head">
         <h3 id="settingsTitle">个性化设置</h3>
         <button class="modal-close" id="closeSettings" aria-label="关闭">✕</button>
@@ -169,11 +171,11 @@
         </div>
         <div class="modal-actions">
           <button class="btn" id="restartBtn">清除存档 / 重新开始</button>
-          <span id="saveStatus" class="ok-msg"></span>
+          <span id="saveStatus" class="ok-msg" role="status"></span>
         </div>
       </div>
     </div>
-  </div>
+  </dialog>
 
   <script type="module" src="./src/pages/index/main.ts"></script>
 </body>
