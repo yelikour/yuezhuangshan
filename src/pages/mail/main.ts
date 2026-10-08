@@ -5,7 +5,7 @@
 import { bootstrap, escapeHtml } from '@shared/bootstrap';
 import { discoverClue, unlock, isNodeActive } from '@shared/progress';
 import { CLUE } from '@data/clues';
-import { IMG } from '@data/assets';
+import { IMG, art } from '@data/assets';
 import { loadState, updateState } from '@shared/storage';
 import { playSfxWithSubtitle } from '@shared/sfx';
 import { ALL_MAILS as allMails, type MailItem } from '@data/mail';
@@ -118,6 +118,15 @@ function open(id: string): void {
     <h2 style="margin:0.4em 0">${escapeHtml(m.subject)}</h2>
     <div class="mail-body">${escapeHtml(m.body)}</div>
   `;
+  // 附件图位（零代码接图，docs/art_pipeline.md）：AI 图放入 src/assets/art/ 后自动显示
+  const attach = m.attachArt ? art(m.attachArt) : null;
+  if (attach) {
+    view.insertAdjacentHTML('beforeend', `
+      <div style="margin-top:0.8em">
+        <img src="${attach}" alt="${escapeHtml(m.attachCaption ?? '附件图片')}" style="max-width:min(420px,100%); display:block; border:1px solid rgba(255,255,255,0.15)" />
+        <div style="opacity:0.55; font-size:0.8em; margin-top:0.25em">${escapeHtml(m.attachCaption ?? '')}</div>
+      </div>`);
+  }
   // 正文滚动归零（切换邮件时回到顶部）
   view.scrollTop = 0;
   // 阅读关键邮件 → 解锁线索（通用）+ 开放后续节点（特定）

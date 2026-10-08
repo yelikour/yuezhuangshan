@@ -14,6 +14,10 @@ export interface MailItem {
   requireNode?: NodeId;
   requireClue?: string;
   folder?: 'inbox' | 'spam';
+  /** 可选附件图位名（零代码接图，docs/art_pipeline.md）：art() 命中才显示 */
+  attachArt?: string;
+  /** 附件图位说明文字（attachArt 存在时显示） */
+  attachCaption?: string;
 }
 
 export const ALL_MAILS: MailItem[] = [

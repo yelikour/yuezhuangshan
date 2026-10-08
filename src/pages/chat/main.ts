@@ -27,9 +27,16 @@ const dialogEl = document.getElementById('dialog')!;
 const choicesEl = document.getElementById('choicesArea')!;
 const memoArea = document.getElementById('memoArea')!;
 
-/** 走廊尽头对称菌斑照片 */
-function moldPhotoHtml(): string {
-  return `<img class="photo-mold" src="${IMG.corridorMold}" alt="走廊尽头墙根的对称菌斑照片" width="280" />`;
+/** 聊天照片道具：photo 字段值 → 图片资源（时间戳/替代文本集中在 CHAT.photos） */
+const PHOTO_SRC: Record<string, string> = {
+  water: IMG.hotelWater,
+  mold: IMG.corridorMold,
+};
+
+/** 照片消息的 HTML（stamp/alt 来自数据层 CHAT.photos，不硬编码在页面脚本） */
+function photoHtml(photo: string): string {
+  const meta = CHAT.photos[photo] ?? { stamp: '', alt: '照片' };
+  return `<div class="bubble" style="margin-top:0.3em"><img class="photo-mold" src="${PHOTO_SRC[photo]}" alt="${escapeHtml(meta.alt)}" width="280" /><div class="photo-stamp">${escapeHtml(meta.stamp)}</div></div>`;
 }
 
 /** 统一的对话节点类型（terminal 与 choices 二选一） */
@@ -51,9 +58,9 @@ function appendHerMessages(nodeId: string): void {
     msgDiv.className = 'chat-msg her';
     let inner = `<div class="chat-time">${m.time}</div>`;
     inner += `<div class="bubble">${escapeHtml(m.text)}</div>`;
-    // 菌斑照片
-    if ('photo' in m && m.photo) {
-      inner += `<div class="bubble" style="margin-top:0.3em">${moldPhotoHtml()}<div class="photo-stamp">IMG_20260620_201501.jpg · 走廊尽头</div></div>`;
+    // 照片道具（水杯/菌斑等，见 CHAT.photos 与 PHOTO_SRC）
+    if ('photo' in m && m.photo && PHOTO_SRC[m.photo]) {
+      inner += photoHtml(m.photo);
     }
     msgDiv.innerHTML = inner;
     dialogEl.appendChild(msgDiv);

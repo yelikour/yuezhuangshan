@@ -191,6 +191,9 @@ export const MAIL = {
     to: '您',
     subject: '回复：关于 2019 年进山未归的周行野',
     date: '2026-06-21 09:47',
+    /** 附件图位（零代码接图，docs/art_pipeline.md）：AI 图放入 src/assets/art/steel_door_thumb.* 后自动显示 */
+    attachArt: 'steel_door_thumb',
+    attachCaption: '〔云相册 · 上传失败的最后一张照片（缩略图残留）〕',
     body: `陌生人，你好。
 
 看到你在论坛存档区翻到我的帖子，我猜你也在查那座山的事。七年了，头一回有人认真找过来。长话短说，我只说我确定知道的：
@@ -321,6 +324,20 @@ export const CHAT = {
   /** 对话结束后 #dialogEnd 区的引导文案（剧情化引导玩家去 P04 资讯站，不出现答案性词）。
    *  由 main.ts 注入，HTML 只保留结构容器（见 AGENTS.md 铁律#1：剧情文案集中 data 层）。 */
   afterDialogHint: '她说要去走廊尽头看看，然后就没了音讯。这座山以前……是不是也有人这样消失过？本地资讯站或许留有存档。',
+  /**
+   * 聊天照片道具（photo 字段）：img 对应 chat/main.ts 的 PHOTO_SRC 映射，
+   * stamp/alt 为照片时间戳与替代文本——文案集中在数据层，不散落页面脚本。
+   */
+  photos: {
+    water: {
+      stamp: 'IMG_20260620_194203.jpg · 客房水杯',
+      alt: '客房床头的水杯照片，杯中饮用水微浊',
+    },
+    mold: {
+      stamp: 'IMG_20260620_201501.jpg · 走廊尽头',
+      alt: '走廊尽头墙根的对称菌斑照片',
+    },
+  } as Record<string, { stamp: string; alt: string }>,
   dialog: {
     n1: {
       her: [
@@ -361,10 +378,10 @@ export const CHAT = {
         { text: '你出门多久了还惦记猫。', next: 'n3' },
       ],
     },
-    // 水味 + 右撇子
+    // 水味 + 右撇子（水杯照：CLUE_LAST_NORMAL_MSG 的视觉锚点）
     n3: {
       her: [
-        { time: '19:42', text: '这家山庄的饮用水有股怪味，你尝出来没？像是……泡过什么东西。' },
+        { time: '19:42', text: '这家山庄的饮用水有股怪味，你尝出来没？像是……泡过什么东西。', photo: 'water' },
         { time: '19:58', text: '对了我用右手写字总蹭脏袖口这毛病，这次带了个速干本，终于不脏了。' },
       ],
       choices: [

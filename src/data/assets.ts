@@ -37,3 +37,21 @@ export const SFX = {
   glitchClick,
   waterDrip,
 } as const;
+
+/**
+ * 零代码接图（docs/art_pipeline.md §四）：动态收集 src/assets/art/ 下的可选美术。
+ * 把按文档命名的图片放进该目录即可让对应页面图位自动显示；
+ * 目录为空 / 文件缺失时返回 null，页面维持纯文本形态，功能不受影响。
+ */
+const ART_GLOB = import.meta.glob<{ default: string }>('../assets/art/*.{webp,png,jpg,jpeg}', {
+  eager: true,
+});
+
+/** 取可选美术图；不存在返回 null。 */
+export function art(name: string): string | null {
+  for (const ext of ['webp', 'png', 'jpg', 'jpeg']) {
+    const hit = ART_GLOB[`../assets/art/${name}.${ext}`];
+    if (hit) return hit.default;
+  }
+  return null;
+}

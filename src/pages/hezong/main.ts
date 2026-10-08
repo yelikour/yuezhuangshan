@@ -10,6 +10,7 @@ import { HEZONG } from '@data/content';
 import { ANSWERS, HINTS, CLUE } from '@data/clues';
 import { requestHint, visibleHints } from '@shared/hints';
 import { playSfxWithSubtitle } from '@shared/sfx';
+import { art } from '@data/assets';
 
 const { denied } = bootstrap({
   pageId: 'hezong', brand: '合奘', domain: 'hezong-teachings.cn',
@@ -76,6 +77,13 @@ function renderDocs(): void {
       <div style="white-space:pre-wrap">${escapeHtml(i.letterBody)}</div>
     </div>
     <p class="readable" style="opacity:0.7; font-style:italic">${escapeHtml(i.outro)}</p>`;
+  // 《归山名录》末页图位（零代码接图，docs/art_pipeline.md）：AI 图放入 src/assets/art/ 后自动显示
+  const rosterArt = art('guilu_roster');
+  if (rosterArt) {
+    const first = docs.querySelector<HTMLElement>('.mail-body');
+    first?.insertAdjacentHTML('afterbegin',
+      `<img src="${rosterArt}" alt="《归山名录》末页：毛笔历届条目的最后三行是打印体编号" style="max-width:min(420px,100%); display:block; margin:0.4em auto; border:1px solid rgba(0,0,0,0.25)" />`);
+  }
 }
 
 function tryGate(): void {

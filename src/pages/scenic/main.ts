@@ -9,7 +9,7 @@ import { SEARCH_P02_KEYWORDS, ANNALS_DB, CLUE } from '@data/clues';
 import { SCENIC } from '@data/content';
 import { requestHint, visibleHints } from '@shared/hints';
 import { HINTS } from '@data/clues';
-import { IMG } from '@data/assets';
+import { IMG, art } from '@data/assets';
 
 const { denied } = bootstrap({
   pageId: 'scenic', brand: '岳桩山生态景区', domain: 'yuezhuangshan-scenic.cn', skin: 'scenic', node: 'P02',
@@ -83,6 +83,13 @@ document.getElementById('annalsLink')!.addEventListener('click', (e) => {
   const ap = document.getElementById('annalsPage')!;
   ap.hidden = false;
   document.getElementById('annalsBody')!.textContent = SCENIC.annalsFragment;
+  // 残页图位（零代码接图，docs/art_pipeline.md）：AI 图放入 src/assets/art/ 后自动显示
+  const fragArt = art('annals_fragment');
+  const fragImg = document.getElementById('annalsFragmentImg') as HTMLImageElement;
+  if (fragArt && fragImg) {
+    fragImg.src = fragArt;
+    fragImg.hidden = false;
+  }
   scrollToContent(ap);
   // 支线 A+：随残页开放档案库检索
   document.getElementById('annalsArchive')!.hidden = false;
